@@ -8,6 +8,7 @@ import { Drawer, Content, Spinner, Badge, Container, Card, CardItem, List, ListI
 import { createStackNavigator } from 'react-navigation';
 import Home2 from './home'
 import ContentDrawer from './contentDrawer'
+import Centros from './comments'
 class HomeScreen extends React.Component {
   render() {
     return (
@@ -67,10 +68,10 @@ class Main extends Component {
 const RootStack = createStackNavigator(
   {
     Home: Main,
-    Details: HomeScreen,
+    Details: Centros,
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Details',
     /* The header config from HomeScreen is now here */
     navigationOptions: {
       headerStyle: {
