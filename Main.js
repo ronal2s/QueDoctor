@@ -8,7 +8,7 @@ import { Drawer, Content, Spinner, Badge, Container, Card, CardItem, List, ListI
 import { createStackNavigator } from 'react-navigation';
 import Home2 from './home'
 import ContentDrawer from './contentDrawer'
-import Centros from './comments'
+import Centros from './centros'
 class HomeScreen extends React.Component {
   render() {
     return (
@@ -20,7 +20,7 @@ class HomeScreen extends React.Component {
 }
 
 
-
+console.disableYellowBox = true;
 class Main extends Component {
   state = {
     active: false, blurImages: [1,1,1,1,1,1,1]
@@ -39,6 +39,7 @@ class Main extends Component {
   };  
   static navigationOptions = ({navigation}) => {
     return{
+      // header: null,
       title: "Título profundo", 
       headerTintColor: "black",       
       headerLeft: (
@@ -49,6 +50,7 @@ class Main extends Component {
       
     }
   };
+
   render() {
     return (
       <Drawer
@@ -59,7 +61,7 @@ class Main extends Component {
           <ContentDrawer/>
         }
         onClose={() => this.closeDrawer()} >                  
-          <Home2 windowDetails={() => this.props.navigation.navigate('Details')}/>
+          <Home2 windowDetails={() => this.props.navigation.push('Details')}/>
       </Drawer >
     );
   }
@@ -71,7 +73,7 @@ const RootStack = createStackNavigator(
     Details: Centros,
   },
   {
-    initialRouteName: 'Details',
+    initialRouteName: 'Home',
     /* The header config from HomeScreen is now here */
     navigationOptions: {
       headerStyle: {

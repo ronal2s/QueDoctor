@@ -17,7 +17,7 @@ export default class Home extends Component {
          <ImageBackground blurRadius={1} resizeMode='cover' source={{ uri: "http://www.besthealthmag.ca/wp-content/uploads/2016/01/doctor_2.jpg" }} style={styles.homeImages}>
            <View flex={1} style={styles.boxes} >
            {/* <TouchableOpacity> */}
-             <Text style={[styles.homeTitles, { marginVertical: 70 }]} >¿Qué doctor?</Text>
+             <Text style={[styles.homeTitles, { marginVertical: 70 }]} >¿Cuál doctor?</Text>
              {/* </TouchableOpacity> */}
            </View>
          </ImageBackground>
@@ -28,7 +28,7 @@ export default class Home extends Component {
          <ImageBackground blurRadius={1} source={{ uri: "https://storage.googleapis.com/mmc-elcaribe-bucket/uploads/2017/12/fcd8b684-homs-fe.jpg" }} style={styles.homeImages}>
            <View flex={1} style={styles.boxes} >
            {/* <TouchableOpacity> */}
-             <Text style={[styles.homeTitles, { marginVertical: 70 }]} >¿Cuál clínica?</Text>
+             <Text style={[styles.homeTitles, { marginVertical: 70 }]} >¿Dónde ir?</Text>
              {/* </TouchableOpacity> */}
            </View>
          </ImageBackground>
