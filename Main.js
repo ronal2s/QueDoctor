@@ -61,7 +61,7 @@ class Main extends Component {
           <ContentDrawer/>
         }
         onClose={() => this.closeDrawer()} >                  
-          <Home2 windowDetails={() => this.props.navigation.push('Details')}/>
+          <Home2 windowDetails={() => this.props.navigation.push('Centros')}/>
       </Drawer >
     );
   }
@@ -70,7 +70,7 @@ class Main extends Component {
 const RootStack = createStackNavigator(
   {
     Home: Main,
-    Details: Centros,
+    Centros: Centros,
   },
   {
     initialRouteName: 'Home',
