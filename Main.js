@@ -20,7 +20,9 @@ class HomeScreen extends React.Component {
 }
 
 
-console.disableYellowBox = true;
+// console.disableYellowBox = true;
+
+
 class Main extends Component {
   state = {
     active: false, blurImages: [1,1,1,1,1,1,1]

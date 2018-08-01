@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  View,
+  View, AsyncStorage,
   Text, StyleSheet,
   ImageBackground, TouchableOpacity
 } from 'react-native';
@@ -46,11 +46,21 @@ const HomeCards = (obj) => {
 
 export default class Home extends Component {
   state = {
-    modal: true
+    modal: true, username:""
+  }
+
+  componentDidMount() 
+  {
+    AsyncStorage.getItem("firstIni", (err, result) => {
+      if(result == 1)
+      {
+        this.setState({modal:false})
+      }
+    })
   }
 
   handleModal = () => {
-    alert(this.state.modal)
+    // alert(this.state.modal)
     this.setState({ modal: false })
   }
   renderButton = () => (
@@ -67,15 +77,35 @@ export default class Home extends Component {
       <Text note>No será compartido a menos que así lo prefieras </Text>
       <Item floatingLabel>
         <Label>Escribir nombre</Label>
-        <Input />
+        <Input value={this.state.username} onChangeText={(username) => this.setState({username})} />
       </Item>
-      <Button block primary ><Text style={{color:"white"}} >Aceptar</Text></Button>
+      <Button block primary onPress={this.saveName} >
+        <Text style={{color:"white"}} >Aceptar</Text>
+      </Button>
     </View>
   );
+
+  saveName = async () =>
+  {
+    const {username} = this.state;
+    if(username != "")
+    {
+      try {
+        await AsyncStorage.setItem("username",username);
+        AsyncStorage.setItem("firstIni", "1");        
+      } catch(error) {
+        console.log("Error on saving: " + error);
+        // alert(error)
+      }
+      // alert(username);
+    }
+    this.setState({ modal: false });
+  }
+
   render() {
     const { windowDetails } = this.props
-    const { modal } = this.state
-    // alert(modal)
+    const { modal } = this.state    
+    
     return (
       <View style={{ flex: 1 }} >
         <HomeCards windowDetails={windowDetails} />
