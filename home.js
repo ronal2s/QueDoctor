@@ -46,15 +46,15 @@ const HomeCards = (obj) => {
 
 export default class Home extends Component {
   state = {
-    modal: true, username:""
+    modal: false, username:""
   }
 
   componentDidMount() 
   {
     AsyncStorage.getItem("firstIni", (err, result) => {
-      if(result == 1)
+      if(result != 1)
       {
-        this.setState({modal:false})
+        this.setState({modal:true})
       }
     })
   }
@@ -100,7 +100,7 @@ export default class Home extends Component {
       // alert(username);
     }
     this.setState({ modal: false });
-  }
+  }  
 
   render() {
     const { windowDetails } = this.props
@@ -109,14 +109,7 @@ export default class Home extends Component {
     return (
       <View style={{ flex: 1 }} >
         <HomeCards windowDetails={windowDetails} />
-        <Modal
-          isVisible={modal}
-          animationIn="slideInLeft"
-          animationOut="slideOutRight"
-          onBackdropPress={() => this.setState({ modal: false })}
-        >
-          {this.renderModalContent()}
-        </Modal>
+        
       </View>
     )
   }
@@ -125,14 +118,6 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   home: {
     margin: 15
-  },
-  modalContent: {
-    backgroundColor: "white",
-    padding: 22,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 4,
-    borderColor: "rgba(0, 0, 0, 0.1)"
   },
   homeTitles: {
     fontSize: "bold", textAlign: "center", textAlignVertical: "center", fontSize: 45,
