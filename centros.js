@@ -6,25 +6,14 @@ import Comments from './comments'
 const GenerateCards = (obj) =>
 {
     const navigate = obj.navigate
-    var thisliked = false
-    // console.warn(obj.centros)
-    // const centros = obj.centros != undefined? obj.centros: [];
-    // console.warn(obj.centros)
+    var thisliked = false    
     return obj.centros.map((v,i) => {
-        // if(obj.liked[i] == v.id)
-        // {
-        //     alert("boom")
-        // } else
-        // {
-        //     alert("l: " + obj.liked[i])
-        // }
-        // if(obj.liked[i] != undefined)
-        // {
-            if(obj.liked[i] != undefined)
-            {
-                thisliked = obj.liked[i].idcentro == v.id;
-            }
-        // }
+        
+        if(obj.liked[i] != undefined)
+        {
+            thisliked = obj.liked[i].idcentro == v.id;
+        }
+        
         return <Card key={i} >
         <CardItem>
             <Body>
@@ -159,7 +148,7 @@ class Centros extends Component
     {
         const {centros, liked, likes} = this.state;
         
-        console.warn(liked)
+        // console.warn(liked)
         return(
             <ScrollView>
                 <GenerateCards centros={centros} navigate={this.props.navigation} handleLike={this.handleLike} liked={liked} likes={likes} />

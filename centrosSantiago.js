@@ -1,15 +1,19 @@
 import React, {Component} from 'react'
-import {Image, ScrollView, Text,} from 'react-native'
+import {Image, ScrollView, Text, AsyncStorage} from 'react-native'
 import { Card, CardItem, Body, Left, Button, Icon, Right} from 'native-base'
 import {createStackNavigator} from 'react-navigation'
-import Comments from './comments'
+import Comments from './commentsCentros'
 const GenerateCards = (obj) =>
 {
     const navigate = obj.navigate
-    // console.warn(obj.centros)
-    // const centros = obj.centros != undefined? obj.centros: [];
-    // console.warn(obj.centros)
+    var thisliked = false    
     return obj.centros.map((v,i) => {
+        
+        if(obj.liked[i] != undefined)
+        {
+            thisliked = obj.liked[i].idcentro == v.id;
+        }
+        
         return <Card key={i} >
         <CardItem>
             <Body>
@@ -22,13 +26,13 @@ const GenerateCards = (obj) =>
         </CardItem>
         <CardItem>
             <Left>
-                <Button transparent onPress={() => obj.handleLike(i)}  >
-                    <Icon  style={obj.liked[i]?"":{color: 'gray'}} name="thumbs-up"/>
+                <Button transparent onPress={() => obj.handleLike(v.id, thisliked)}  >
+                    <Icon  style={thisliked?"":{color: 'gray'}} name="thumbs-up"/>
                     <Text>{" " + v.likes + " Likes"}</Text>
                 </Button>
             </Left>
             <Body>
-                <Button transparent onPress={() => navigate.push("Commentx", {prueba: "funciona"})} >
+                <Button transparent onPress={() => navigate.push("Commentx", {idCentro: v.id})} >
                     <Icon style={{color: "gray"}} name="chatbubbles"/>
                     <Text>Comentarios</Text>
                 </Button>
@@ -47,48 +51,93 @@ class Centros extends Component
 {
     state = 
     {
-        liked: [false,false,false,false],
+        liked: [{idcentro: 'a'}],
         likes: [126,133,12,89],
-        city: "", centros:[]
+        city: "", centros:[], actualUser:""
     }
 
     componentDidMount()
-    {
-        const city = this.props.navigation.getParam("city");
-        alert(this.state.city)
-        // console.warn(this.props.navigation)
-        this.setState({city});
-        
-        if(city == "all")
-        {
-            this.getCentrosTodos();
-        }
-        // this.getCentrosTodos("");
-
-        
+    {        
+        // const city = this.props.navigation.getParam("ciudad");
+        // alert(city)
+        this.getCentrosCiudad("Santiago De Los Caballeros");     
+        this.getMisLikes();
+        AsyncStorage.getItem("username", (err, result) => {
+            if(!err)
+            {
+                // alert(result)
+                this.setState({actualUser: result});
+                fetch("https://serverquedoctor.herokuapp.com/usuarioActual?usuario="+result);
+            }
+        })
     }
 
-    fetchCentrosTodos = async () => {
-        const response = await fetch("https://serverquedoctor.herokuapp.com/centros/");
+    
+
+    getMisLikes = () =>
+    {
+        this.fetchMisLikes()
+            .then(res => this.setState({liked: res}))
+            .catch(err => console.log(err));
+    }
+    
+    fetchMisLikes = async() => {
+        const response = await fetch("https://serverquedoctor.herokuapp.com/centros/misLikes");
         const body = response.json();
         if(response.status != 200) throw Error(body.message)
         return body;
     }
 
-    getCentrosTodos = () => {
-        this.fetchCentrosTodos()
+    fetchCentrosCiudad = async (city) => {
+        const response = await fetch("https://serverquedoctor.herokuapp.com/centros/ciudad?ciudad="+city);
+        const body = response.json();
+        if(response.status != 200) throw Error(body.message)
+        return body;
+    }
+
+    getCentrosCiudad = (city) => {
+        this.fetchCentrosCiudad(city)
             .then(res => this.setState({centros: res}))
             .catch(err => console.log(err));
     }
 
+    fetchLike = async(idCentro) =>
+    {
+        const response = await fetch("https://serverquedoctor.herokuapp.com/centros/like?idCentro="+idCentro);
+        const body = response.json();
+        if(response.status != 200) throw Error(body.message)
+        return body;
+    }
+    fetchUnLike = async(idCentro) =>
+    {
+        const response = await fetch("https://serverquedoctor.herokuapp.com/centros/unlike?idCentro="+idCentro);
+        const body = response.json();
+        if(response.status != 200) throw Error(body.message)
+        return body;
+    }
 
-
-    handleLike = (numHospital) => {
+    handleLike = (idCentro, liked) => {
         // alert(numHospital)
-        var {liked, likes} = this.state;
-        likes[numHospital] = liked[numHospital]? likes[numHospital] - 1: likes[numHospital] + 1;
-        liked[numHospital] = liked[numHospital]?false:true;
-        this.setState({likes, liked})
+        if(!liked)
+        {
+            this.fetchLike(idCentro)
+                .then(res => {
+                    this.setState({centros: res})
+                    this.getMisLikes();
+                })
+                .catch(err => console.log(err));
+                
+            
+        } else {
+            this.fetchUnLike(idCentro)
+                .then(res => {
+                    this.setState({centros: res})
+                    this.getMisLikes();
+                })
+                .catch(err => console.log(err));
+                this.getMisLikes();
+            }
+        
         
     }
 
@@ -100,7 +149,8 @@ class Centros extends Component
     render()
     {
         const {centros, liked, likes} = this.state;
-        // console.warn(centros)
+        
+        // console.warn(liked)
         return(
             <ScrollView>
                 <GenerateCards centros={centros} navigate={this.props.navigation} handleLike={this.handleLike} liked={liked} likes={likes} />

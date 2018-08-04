@@ -10,6 +10,9 @@ import Modal from "react-native-modal";
 import Home2 from './home'
 import ContentDrawer from './contentDrawer'
 import Centros from './centros'
+import CentrosSantiago from './centrosSantiago'
+import Comments from './comments'
+
 class HomeScreen extends React.Component {
   render() {
     return (
@@ -106,7 +109,7 @@ class Main extends Component {
         panCloseMask={0.5}
         ref={(ref) => { this.drawer = ref; }}
         content={
-          <ContentDrawer centrosSantago={() => navigate.push("Centros", {city: "santiago"}) }/>
+          <ContentDrawer centrosSantago={() => navigate.push("CentrosSantiago") }/>
         }
         onClose={() => this.closeDrawer()} >
         <Modal
@@ -127,6 +130,7 @@ const RootStack = createStackNavigator(
   {
     Home: Main,
     Centros: Centros,
+    CentrosSantiago: CentrosSantiago
   },
   {
     initialRouteName: 'Home',
