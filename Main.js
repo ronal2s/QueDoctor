@@ -99,13 +99,14 @@ class Main extends Component {
 
   render() {
     const { modal } = this.state
+    const navigate = this.props.navigation;
     return (
       <Drawer
         openDrawerOffset={0.5}
         panCloseMask={0.5}
         ref={(ref) => { this.drawer = ref; }}
         content={
-          <ContentDrawer />
+          <ContentDrawer centrosSantago={() => navigate.push("Centros", {city: "santiago"}) }/>
         }
         onClose={() => this.closeDrawer()} >
         <Modal
@@ -116,7 +117,7 @@ class Main extends Component {
         >
           {this.renderModalContent()}
         </Modal>
-        <Home2 windowDetails={() => this.props.navigation.push('Centros')} />
+        <Home2 centros={() => navigate.push("Centros", {city: "all"})} />
       </Drawer >
     );
   }
