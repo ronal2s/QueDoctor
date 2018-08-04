@@ -68,12 +68,12 @@ class Main extends Component {
 
   saveName = async () => {
     const { username } = this.state;
-    if (username != "") {
+    if (username != "") { alert("x")
       try {
         await AsyncStorage.setItem("username", username);
         AsyncStorage.setItem("firstIni", "1");
       } catch (error) {
-        console.log("Error on saving: " + error);
+        console.error("Error on saving: " + error);
         // alert(error)
       }
       // alert(username);
