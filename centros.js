@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Image, ScrollView, Text, AsyncStorage} from 'react-native'
-import { Card, CardItem, Body, Left, Button, Icon, Right} from 'native-base'
+import { Card, CardItem, Body, Left, Button, Icon, Right, Spinner} from 'native-base'
 import {createStackNavigator} from 'react-navigation'
 import Comments from './commentsCentros'
 
@@ -9,53 +9,58 @@ const GenerateCards = (obj) =>
 {
     const navigate = obj.navigate
     var thisliked = false    
-    return obj.centros.map((v,i) => {
-        thisliked=false;        
-        if(obj.liked != undefined)
-        {
-            for(let x=0; x<obj.liked.length;x++)
+    if(obj.centros.length>0)
+    {
+        return obj.centros.map((v,i) => {
+            thisliked=false;        
+            if(obj.liked != undefined)
             {
-                // alert(obj.liked[x].idcentro + " - " + v.id)
-                if(obj.liked[x].idcentro == v.id)
+                for(let x=0; x<obj.liked.length;x++)
                 {
-                    thisliked = true;
-                    break;
+                    // alert(obj.liked[x].idcentro + " - " + v.id)
+                    if(obj.liked[x].idcentro == v.id)
+                    {
+                        thisliked = true;
+                        break;
+                    }
                 }
             }
-        }
-        
-        return <Card key={i} >
-        <CardItem>
-            <Body>
-                <Text>{v.nombre}</Text>
-                <Text note>{v.ciudad + ", " + v.direccion}</Text>
-            </Body>
-        </CardItem>
-        <CardItem cardBody>
-            <Image source={{uri: v.image}} style={{height:200, width:200, flex:1}} />
-        </CardItem>
-        <CardItem>
-            <Left>
-                <Button transparent onPress={() => obj.handleLike(v.id, thisliked)}  >
-                    <Icon  style={thisliked?"":{color: 'gray'}} name="thumbs-up"/>
-                    <Text>{" " + v.likes + " Likes"}</Text>
-                </Button>
-            </Left>
-            <Body>
-                <Button transparent onPress={() => navigate.push("Commentx", {idCentro: v.id})} >
-                    <Icon style={{color: "gray"}} name="chatbubbles"/>
-                    <Text>Comentarios</Text>
-                </Button>
-            </Body>
-            <Right>
-                <Button transparent>
-                    <Icon style={{color: "gray"}} name="map"/>
-                    <Text> Cómo llegar</Text>
-                </Button>
-            </Right>
-        </CardItem>
-    </Card>
-    })
+            
+            return <Card key={i} >
+            <CardItem>
+                <Body>
+                    <Text>{v.nombre}</Text>
+                    <Text note>{v.ciudad + ", " + v.direccion}</Text>
+                </Body>
+            </CardItem>
+            <CardItem cardBody>
+                <Image source={{uri: v.image}} style={{height:200, width:200, flex:1}} />
+            </CardItem>
+            <CardItem>
+                <Left>
+                    <Button transparent onPress={() => obj.handleLike(v.id, thisliked)}  >
+                        <Icon  style={thisliked?"":{color: 'gray'}} name="thumbs-up"/>
+                        <Text>{" " + v.likes + " Likes"}</Text>
+                    </Button>
+                </Left>
+                <Body>
+                    <Button transparent onPress={() => navigate.push("Commentx", {idCentro: v.id})} >
+                        <Icon style={{color: "gray"}} name="chatbubbles"/>
+                        <Text>Comentarios</Text>
+                    </Button>
+                </Body>
+                <Right>
+                    <Button transparent>
+                        <Icon style={{color: "gray"}} name="map"/>
+                        <Text> Cómo llegar</Text>
+                    </Button>
+                </Right>
+            </CardItem>
+        </Card>
+        })
+    }
+    return <Spinner/>
+    
 }
 class Centros extends Component
 {
@@ -63,7 +68,7 @@ class Centros extends Component
     {
         liked: [{idcentro: 'a'}],
         likes: [126,133,12,89],
-        city: "", centros:[], actualUser:""
+        city: "", centros:[], actualUser:"", loading:true,
     }
 
     componentDidMount()
