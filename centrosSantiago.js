@@ -130,28 +130,33 @@ class Centros extends Component
 
     handleLike = (idCentro, liked) => {
         // alert(numHospital)
-        if(!liked)
-        {
-            this.fetchLike(idCentro)
-                .then(res => {
-                    // this.setState({centros: res})
-                    this.getCentrosCiudad("Santiago De Los Caballeros");                         
-                    this.getMisLikes();
-                })
-                .catch(err => console.log(err));
+        // if(!liked)
+        // {
+        //     this.fetchLike(idCentro)
+        //         .then(res => {
+        //             // this.setState({centros: res})
+        //             this.getCentrosCiudad("Santiago De Los Caballeros");                         
+        //             this.getMisLikes();
+        //         })
+        //         .catch(err => console.log(err));
                 
             
-        } else {
-            this.fetchUnLike(idCentro)
-                .then(res => {
-                    // this.setState({centros: res})
-                    this.getCentrosCiudad("Santiago De Los Caballeros");
-                    this.getMisLikes();
-                })
-                .catch(err => console.log(err));
+        // } else {
+        //     this.fetchUnLike(idCentro)
+        //         .then(res => {
+        //             // this.setState({centros: res})
+        //             this.getCentrosCiudad("Santiago De Los Caballeros");
+        //             this.getMisLikes();
+        //         })
+        //         .catch(err => console.log(err));
+        //         this.getMisLikes();
+        //     }
+        this.fetchLike(idCentro)
+            .then(res => {
+                this.setState({centros: res})
                 this.getMisLikes();
-            }
-        
+            })
+            .catch(err => console.log(err));
         
     }
 
