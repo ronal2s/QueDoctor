@@ -153,7 +153,8 @@ class Centros extends Component
         //     }
         this.fetchLike(idCentro)
             .then(res => {
-                this.setState({centros: res})
+                // this.setState({centros: res})
+                this.getCentrosCiudad("Santiago De Los Caballeros");
                 this.getMisLikes();
             })
             .catch(err => console.log(err));

@@ -24,7 +24,7 @@ class HomeScreen extends React.Component {
 }
 
 
-// console.disableYellowBox = true;
+console.disableYellowBox = true;
 
 
 class Main extends Component {
