@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Image, ScrollView, Text, AsyncStorage, Linking} from 'react-native'
+import {Image, View,ImageBackground,ScrollView, Text, AsyncStorage, Linking} from 'react-native'
 import { Card, CardItem, Body, Left, Button, Icon, Right, Spinner} from 'native-base'
 import {createStackNavigator} from 'react-navigation'
 import Comments from './commentsCentros'
@@ -34,7 +34,9 @@ const GenerateCards = (obj) =>
                 </Body>
             </CardItem>
             <CardItem cardBody>
-                <Image source={{uri: v.image}} style={{height:200, width:200, flex:1}} />
+                <ImageBackground source={{uri: v.image}} style={{height:200, width:400, margin: 3, flex:1}}>
+                <View flex={1} style={{backgroundColor: "rgba(129,212,250,0.3)"}} />
+                </ImageBackground>
             </CardItem>
             <CardItem>
                 <Left>

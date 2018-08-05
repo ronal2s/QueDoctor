@@ -12,6 +12,8 @@ import ContentDrawer from './contentDrawer'
 import Centros from './centros'
 import CentrosSantiago from './centrosSantiago'
 import CentrosSantoDomingo from './centrosSantoDomingo'
+import CentrosLaVega from './centrosLaVega'
+import CentrosMacoris from './centrosMacoris'
 import Comments from './comments'
 
 class HomeScreen extends React.Component {
@@ -110,7 +112,10 @@ class Main extends Component {
         panCloseMask={0.5}
         ref={(ref) => { this.drawer = ref; }}
         content={
-          <ContentDrawer centrosSantago={() => navigate.push("CentrosSantiago") } centrosSantoDomingo={() => navigate.push("CentrosSantoDomingo")} />
+          <ContentDrawer centrosSantago={() => navigate.push("CentrosSantiago") } 
+          centrosSantoDomingo={() => navigate.push("CentrosSantoDomingo")}
+          centrosLaVega={() => navigate.push("CentrosLaVega")}
+          centrosMacoris={() => navigate.push("CentrosMacoris")} />
         }
         onClose={() => this.closeDrawer()} >
         <Modal
@@ -132,7 +137,9 @@ const RootStack = createStackNavigator(
     Home: Main,
     Centros: Centros,
     CentrosSantiago: CentrosSantiago,
-    CentrosSantoDomingo: CentrosSantoDomingo
+    CentrosSantoDomingo: CentrosSantoDomingo,
+    CentrosLaVega: CentrosLaVega,
+    CentrosMacoris: CentrosMacoris,
   },
   {
     initialRouteName: 'Home',

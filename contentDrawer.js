@@ -9,7 +9,7 @@ import { Drawer, Content, Spinner, Badge, Container, Card, CardItem, List, ListI
 export default class contentDrawer extends Component {
     render()
     {
-      const {centrosSantago, centrosSantoDomingo} = this.props;
+      const {centrosSantago, centrosSantoDomingo, centrosLaVega, centrosMacoris} = this.props;
         return(
             <View flex={1} >
   <View flex={1} style={styles.caja1} >
@@ -33,7 +33,7 @@ export default class contentDrawer extends Component {
   <View flex={1} style={styles.caja1} >
     <ImageBackground blurRadius={1} source={{ uri: "https://static.panoramio.com.storage.googleapis.com/photos/large/21828857.jpg" }} style={styles.drawerImages}>
       <View flex={1} style={styles.optionsCity} >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={centrosLaVega} >
           <Text style={[styles.drawerTitles, { marginVertical: 60 }]} >La vega</Text>
         </TouchableOpacity>
       </View>
@@ -42,7 +42,7 @@ export default class contentDrawer extends Component {
   <View flex={1} style={styles.caja1} >
     <ImageBackground blurRadius={1} source={{ uri: "http://www.cocnoticias.com/wp-content/uploads/2016/06/Catedral-San-Pedro-Apostol.jpg" }} style={styles.drawerImages}>
       <View flex={1} style={styles.optionsCity} >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={centrosMacoris}>
           <Text style={[styles.drawerTitles, { marginVertical: 60 }]} >Macoris</Text>
         </TouchableOpacity>
       </View>
