@@ -2,16 +2,26 @@ import React, {Component} from 'react'
 import {Image, ScrollView, Text, AsyncStorage} from 'react-native'
 import { Card, CardItem, Body, Left, Button, Icon, Right} from 'native-base'
 import {createStackNavigator} from 'react-navigation'
-import Comments from './comments'
+import Comments from './commentsCentros'
+
+
 const GenerateCards = (obj) =>
 {
     const navigate = obj.navigate
     var thisliked = false    
     return obj.centros.map((v,i) => {
-        
-        if(obj.liked[i] != undefined)
+        thisliked=false;        
+        if(obj.liked != undefined)
         {
-            thisliked = obj.liked[i].idcentro == v.id;
+            for(let x=0; x<obj.liked.length;x++)
+            {
+                // alert(obj.liked[x].idcentro + " - " + v.id)
+                if(obj.liked[x].idcentro == v.id)
+                {
+                    thisliked = true;
+                    break;
+                }
+            }
         }
         
         return <Card key={i} >
@@ -32,7 +42,7 @@ const GenerateCards = (obj) =>
                 </Button>
             </Left>
             <Body>
-                <Button transparent onPress={() => navigate.push("Commentx", {prueba: "funciona"})} >
+                <Button transparent onPress={() => navigate.push("Commentx", {idCentro: v.id})} >
                     <Icon style={{color: "gray"}} name="chatbubbles"/>
                     <Text>Comentarios</Text>
                 </Button>
@@ -116,26 +126,30 @@ class Centros extends Component
 
     handleLike = (idCentro, liked) => {
         // alert(numHospital)
-        if(!liked)
-        {
+        // alert(liked)
+        // if(liked)
+        // {
+        //     this.fetchUnLike(idCentro)
+        //         .then(res => {
+        //             this.setState({centros: res})
+        //             this.getMisLikes();
+        //         })
+        //         .catch(err => console.log(err));
+        //         this.getMisLikes();                            
+        // } else {
+        //     this.fetchLike(idCentro)
+        //         .then(res => {
+        //             this.setState({centros: res})
+        //             this.getMisLikes();
+        //         })
+        //         .catch(err => console.log(err));
+        //     }
             this.fetchLike(idCentro)
-                .then(res => {
-                    this.setState({centros: res})
-                    this.getMisLikes();
-                })
-                .catch(err => console.log(err));
-                
-            
-        } else {
-            this.fetchUnLike(idCentro)
-                .then(res => {
-                    this.setState({centros: res})
-                    this.getMisLikes();
-                })
-                .catch(err => console.log(err));
+            .then(res => {
+                this.setState({centros: res})
                 this.getMisLikes();
-            }
-        
+            })
+            .catch(err => console.log(err));
         
     }
 
