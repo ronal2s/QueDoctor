@@ -48,7 +48,7 @@ const GenerateCards = (obj) =>
                     </Button>
                 </Body>
                 <Right>
-                    <Button transparent>
+                    <Button transparent onPress={() => Linking.openURL("https://www.google.com/maps/search/?api=1&query="+v.nombre+"+Hospital")} >
                         <Icon style={{color: "gray"}} name="map"/>
                         <Text> Cómo llegar</Text>
                     </Button>

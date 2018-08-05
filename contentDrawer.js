@@ -9,7 +9,7 @@ import { Drawer, Content, Spinner, Badge, Container, Card, CardItem, List, ListI
 export default class contentDrawer extends Component {
     render()
     {
-      const {centrosSantago} = this.props;
+      const {centrosSantago, centrosSantoDomingo} = this.props;
         return(
             <View flex={1} >
   <View flex={1} style={styles.caja1} >
@@ -24,7 +24,7 @@ export default class contentDrawer extends Component {
   <View flex={1} style={styles.caja1} >
     <ImageBackground blurRadius={1} source={{ uri: "https://1.bp.blogspot.com/-AU37w-3VPk4/WpBbqo8AhGI/AAAAAAADfSU/0-1Gd0q4KOY5v342VcYaFIrVzDkYjSoMgCLcBGAs/s1600/plazabanderaaerea.png" }} style={styles.drawerImages}>
       <View flex={1} style={styles.optionsCity} >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={centrosSantoDomingo} >
           <Text style={[styles.drawerTitles, { marginVertical: 60 }]} >Santo Domingo</Text>
         </TouchableOpacity>
       </View>

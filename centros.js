@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Image, ScrollView, Text, AsyncStorage} from 'react-native'
+import {Image, ScrollView, Text, AsyncStorage, Linking} from 'react-native'
 import { Card, CardItem, Body, Left, Button, Icon, Right, Spinner} from 'native-base'
 import {createStackNavigator} from 'react-navigation'
 import Comments from './commentsCentros'
@@ -50,7 +50,7 @@ const GenerateCards = (obj) =>
                     </Button>
                 </Body>
                 <Right>
-                    <Button transparent>
+                    <Button transparent onPress={() => Linking.openURL("https://www.google.com/maps/search/?api=1&query="+v.nombre+"+Hospital")} >
                         <Icon style={{color: "gray"}} name="map"/>
                         <Text> Cómo llegar</Text>
                     </Button>
