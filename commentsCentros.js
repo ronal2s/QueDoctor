@@ -40,7 +40,7 @@ const AddComment = (obj) => {
                     selectedValue={obj.valueServicio}
                     onValueChange={obj.handlePickerNombre}
                 >
-                    <Picker.Item label="¿Que tal fue el servicio?" value="0" />
+                    <Picker.Item label="¿Que tal fue el servicio?" value={0} />
                     <Picker.Item label="Recomendado" value="recomendado" />
                     <Picker.Item label="Aceptable" value="aceptable" />
                     <Picker.Item label="No recomendado" value="noRecomendado" />
@@ -73,7 +73,7 @@ const AddComment2 = (obj) => {
                 selectedValue={obj.valueNombre}
                 onValueChange={obj.handlePickerNombre}
             >
-                <Picker.Item label="¿Anónimo?" value="0" />
+                <Picker.Item label="¿Anónimo?" value={0} />
                 <Picker.Item label="Anónimo" value="Anónimo" />
                 <Picker.Item label={obj.username} value={obj.username} />
             </Picker>
@@ -113,8 +113,7 @@ const Comments2 = (obj) => {
     // alert(obj.loading)
     // alert(obj.loading + "-" +obj.comments.length)
     if (!obj.loading) {
-        if(obj.comments.length >0)
-        {
+        if (obj.comments.length > 0) {
             return obj.comments.map((v, i) => {
                 numColor = Math.floor(Math.random() * (5 - 0) + 0)
                 // firstLetterUserName = v.usuario.toUpperCase();
@@ -139,18 +138,18 @@ const Comments2 = (obj) => {
                 </List>
             })
         } else {
-            return <View  style={{flex:1, flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+            return <View style={{ flex: 1, flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
 
-            <Text  >Sin comentarios</Text>
+                <Text  >Sin comentarios</Text>
             </View>
         }
-        
+
     } else {
         return <Spinner />
     }
-    
-    
-    
+
+
+
 }
 
 export default class classComments extends Component {
@@ -158,7 +157,7 @@ export default class classComments extends Component {
         {
             valueServicio: "0", valueNombre: "0", date: moment(new Date()).format("DD/MM/YYYY"), comment: "",
             avatarColors: ["#d32f2f", "#7b1fa2", "#1976d2", "#388e3c", "#ffa000", "#e64a19"],
-            comments: [], username: "", idCentro: "", modal:false, loading:true
+            comments: [], username: "", idCentro: "", modal: false, loading: true
         }
     handlePickerServicio = (value: string) => {
         this.setState({ valueServicio: value })
@@ -212,7 +211,7 @@ export default class classComments extends Component {
 
     getComentarios = (idCentro) => {
         this.fetchComentarios(idCentro)
-            .then(res => this.setState({ comments: res, loading:false }))
+            .then(res => this.setState({ comments: res, loading: false }))
             .catch(err => {
                 alert("Error obteniendo comentarios")
                 console.log(err)
@@ -227,14 +226,28 @@ export default class classComments extends Component {
     }
 
     agregarComentario = (idCentro) => {
-        this.fetchAgregar(idCentro)
-            .then(res => {
-                this.setState({ comments: res, comment: "", valueServicio: "0", modal: false })
-            })
-            .catch(err => {
-                console.log(err);
-                alert("Error obteniendo nuevos comentarios")
-            })
+        const { valueServicio, valueNombre, comment } = this.state;
+        if (valueNombre != 0) {
+            if (valueServicio != 0) {
+                if (comment != "") {
+                    this.fetchAgregar(idCentro)
+                        .then(res => {
+                            this.setState({ comments: res, comment: "", valueServicio: "0", modal: false })
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            alert("Error obteniendo nuevos comentarios")
+                        })
+                } else {
+                    alert("El comentario no puede estar vacío")
+                }
+            } else {
+                alert("Debe seleccionar que tal fue el servicio")
+            }
+        } else {
+            alert("Debe seleccionar si ser anónimo o el nombre registrado")
+        }
+
     }
 
     handleComment = (text) => {
@@ -250,47 +263,47 @@ export default class classComments extends Component {
         // console.warn(comments)
         return (
             <Container style={{ backgroundColor: "white" }}>
-                 <ScrollView  >
-                
-                     {/* <AddComment2 comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
-                         valueServicio={valueServicio} valueNombre={valueNombre} username={username} /> */}
-                     <Divider />
-                     <Comments2 loading={loading} actualUser={username} deleteComment={this.deleteComment} colors={avatarColors} comments={comments} />
-                 </ScrollView>
-                <View style={{flex: 1}} >
-                <Fab
-                    active={this.state.active}
-                    //#03a9f4
-                    containerStyle={{}}
-                    style={{ backgroundColor: '#03a9f4' }}
-                    position="bottomRight"
-                    onPress={() => this.setState({ modal:true })}>
-                    <Icon  type="MaterialCommunityIcons" name="comment-plus-outline"  />
+                <ScrollView  >
 
-                </Fab>
+                    {/* <AddComment2 comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
+                         valueServicio={valueServicio} valueNombre={valueNombre} username={username} /> */}
+                    <Divider />
+                    <Comments2 loading={loading} actualUser={username} deleteComment={this.deleteComment} colors={avatarColors} comments={comments} />
+                </ScrollView>
+                <View style={{ flex: 1 }} >
+                    <Fab
+                        active={this.state.active}
+                        //#03a9f4
+                        containerStyle={{}}
+                        style={{ backgroundColor: '#03a9f4' }}
+                        position="bottomRight"
+                        onPress={() => this.setState({ modal: true })}>
+                        <Icon type="MaterialCommunityIcons" name="comment-plus-outline" />
+
+                    </Fab>
                 </View>
                 <Modal
-          isVisible={modal}
-          animationIn="slideInLeft"
-          animationOut="slideOutRight"
-          onBackdropPress={() => this.setState({ modal: false })}
-        >
-          <AddComment2  comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
-                         valueServicio={valueServicio} valueNombre={valueNombre} username={username} />
-        </Modal>
-            </Container>            
+                    isVisible={modal}
+                    animationIn="slideInLeft"
+                    animationOut="slideOutRight"
+                    onBackdropPress={() => this.setState({ modal: false })}
+                >
+                    <AddComment2 comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
+                        valueServicio={valueServicio} valueNombre={valueNombre} username={username} />
+                </Modal>
+            </Container>
         )
     }
 }
 
 const styles = StyleSheet.create({
-  modalContent: {
-    
-    backgroundColor: "white",
-    padding: 22,
-    // justifyContent: "center",
-    // alignItems: "center",
-    borderRadius: 4,
-    // borderColor: "rgba(0, 0, 0, 0.1)"
-  },
+    modalContent: {
+
+        backgroundColor: "white",
+        padding: 22,
+        // justifyContent: "center",
+        // alignItems: "center",
+        borderRadius: 4,
+        // borderColor: "rgba(0, 0, 0, 0.1)"
+    },
 })
