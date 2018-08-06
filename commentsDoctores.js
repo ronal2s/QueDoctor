@@ -99,7 +99,7 @@ const AddComment2 = (obj) => {
         {/* <Content> */}
         <Form>
             <Textarea rowSpan={5} value={obj.comment} onChangeText={(text) => obj.handleComment(text)} placeholder="Escribir comentario" />
-            <Button block success onPress={obj.enviarComentario} ><Text style={{ color: "white" }} >Enviar</Text></Button>
+            <Button block success onPress={obj.enviarComentario} style={{ backgroundColor: '#03a9f4' }}><Text style={{ color: "white" }} >Enviar</Text></Button>
         </Form>
     </View>
 }
@@ -162,6 +162,7 @@ export default class classComments extends Component {
             comments: [], username: "", idDoctor: "", modal:false, loading:true
         }
     handlePickerServicio = (value: string) => {
+        alert(value)
         this.setState({ valueServicio: value })
     }
     handlePickerNombre = (value: string) => {

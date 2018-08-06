@@ -51,7 +51,7 @@ const AddComment = (obj) => {
             <Content>
                 <Form>
                     <Textarea rowSpan={5} placeholder="Escribir comentario" />
-                    <Button block success ><Text style={{ color: "white" }} >Enviar</Text></Button>
+                    <Button block success onPress={obj.enviarComentario} style={{ backgroundColor: '#03a9f4' }}><Text style={{ color: "white" }} >Enviar</Text></Button>
                 </Form>
             </Content>
         </CardItem>
@@ -99,7 +99,7 @@ const AddComment2 = (obj) => {
         {/* <Content> */}
         <Form>
             <Textarea rowSpan={5} value={obj.comment} onChangeText={(text) => obj.handleComment(text)} placeholder="Escribir comentario" />
-            <Button block success onPress={obj.enviarComentario} ><Text style={{ color: "white" }} >Enviar</Text></Button>
+            <Button block success onPress={obj.enviarComentario} style={{ backgroundColor: '#03a9f4' }} ><Text style={{ color: "white" }} >Enviar</Text></Button>
         </Form>
     </View>
 }

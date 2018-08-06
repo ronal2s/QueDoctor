@@ -167,7 +167,7 @@ class classComments extends Component {
             avatarColors: ["#d32f2f", "#7b1fa2", "#1976d2", "#388e3c", "#ffa000", "#e64a19"],
             comments: [], username: "", idCentro: "", modal: false, loading: true,
             doctor: { nombres: "", apellidos: "", valueEspecialidad: "", valueServicio: "", comentario: "", idCentro: "" },
-            doctores: [], centros: [], liked: [], date: moment(new Date()).format("DD/MM/YYYY"),
+            doctores: [], centros: [{id:-1,nombre:"Seleccionar centro médico"}], liked: [], date: moment(new Date()).format("DD/MM/YYYY"),
         }
     
 
@@ -219,7 +219,11 @@ class classComments extends Component {
     }
     getCentros = () => {
         this.fetchCentros()
-            .then(res => this.setState({ centros: res }))
+            .then(res => {
+                var {centros} = this.state;
+                centros.concat(res) 
+                this.setState({centros })
+            })
             .catch(err => {
                 alert("Error obteniendo comentarios")
                 console.log(err)
@@ -276,7 +280,7 @@ class classComments extends Component {
             return <Picker.Item label={v} value={v} />
         })
     }
-    centros = (centros) => {
+    centros = (centros) => {        
         return centros.map((v, i) => {
 
             return <Picker.Item label={v.nombre} value={v.id} />
@@ -327,7 +331,7 @@ class classComments extends Component {
                         style={{ backgroundColor: '#03a9f4' }}
                         position="bottomRight"
                         onPress={() => this.setState({ modal: true })}>
-                        <Icon type="MaterialCommunityIcons" name="comment-plus-outline" />
+                        <Icon type="MaterialIcons" name="person-add" />
 
                     </Fab>
                 </View>
