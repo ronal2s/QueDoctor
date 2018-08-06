@@ -185,7 +185,6 @@ const RootStack = createStackNavigator(
     },
     {
         initialRouteName: "Home",
-        initialRouteParams: {city:"si"}
     }
 )
 

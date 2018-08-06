@@ -4,7 +4,7 @@ import { Card, CardItem, Picker, Item, Icon, Fab, Textarea, View, Form, Content,
 import { Avatar, Divider } from 'react-native-elements'
 import moment from 'moment'
 import Modal from "react-native-modal";
-import {createStackNavigator} from 'react-navigation'
+import { createStackNavigator } from 'react-navigation'
 
 
 const AddDoctor = (obj) => {
@@ -12,10 +12,10 @@ const AddDoctor = (obj) => {
 
         <Text style={{ textAlign: "center" }} >¿Quién fue tú Doctor?</Text>
         <Item>
-            <Input placeholder="Nombre del doctor"/>
+            <Input placeholder="Nombre del doctor" />
         </Item>
         <Item>
-            <Input placeholder="Apellidos"/>
+            <Input placeholder="Apellidos" />
         </Item>
         <Item picker>
             <Picker
@@ -24,34 +24,47 @@ const AddDoctor = (obj) => {
                 iosIcon={<Icon name="ios-arrow-down-outline" />}
                 placeholderStyle={{ color: "#bfc6ea" }}
                 placeholderIconColor="#007aff"
-                selectedValue={obj.valueNombre}
+                selectedValue={obj.valueEspecialidad}
                 onValueChange={obj.handlePickerNombre}
             >
                 {obj.especialidades}
             </Picker>
         </Item>
         <Item picker>
-                <Picker
+            <Picker
+                mode="dropdown"
+                placeholder="Seleccionar"
+                iosIcon={<Icon name="ios-arrow-down-outline" />}
+                placeholderStyle={{ color: "#bfc6ea" }}
+                placeholderIconColor="#007aff"
+                selectedValue={obj.valueCentro}
+                onValueChange={obj.handlePickerCentro}
+            >
+                {obj.centros}
+            </Picker>
+        </Item>
+        <Item picker>
+            <Picker
 
-                    mode="dropdown"
-                    placeholder="Seleccionar"
-                    iosIcon={<Icon name="ios-arrow-down-outline" />}
-                    placeholderStyle={{ color: "#bfc6ea" }}
-                    placeholderIconColor="#007aff"
-                    selectedValue={obj.valueServicio}
-                    onValueChange={obj.handlePickerNombre}
-                >
-                    <Picker.Item label="¿Que tal fue la experiencia?" value="0" />
-                    <Picker.Item label="Recomendado" value="recomendado" />
-                    <Picker.Item label="Aceptable" value="aceptable" />
-                    <Picker.Item label="No recomendado" value="noRecomendado" />
-                </Picker>
-            </Item>
-        
+                mode="dropdown"
+                placeholder="Seleccionar"
+                iosIcon={<Icon name="ios-arrow-down-outline" />}
+                placeholderStyle={{ color: "#bfc6ea" }}
+                placeholderIconColor="#007aff"
+                selectedValue={obj.valueServicio}
+                onValueChange={obj.handlePickerNombre}
+            >
+                <Picker.Item label="¿Que tal fue la experiencia?" value="0" />
+                <Picker.Item label="Recomendado" value="recomendado" />
+                <Picker.Item label="Aceptable" value="aceptable" />
+                <Picker.Item label="No recomendado" value="noRecomendado" />
+            </Picker>
+        </Item>
+
         {/* <Content> */}
         <Form>
             <Textarea rowSpan={5} value={obj.comment} onChangeText={(text) => obj.handleComment(text)} placeholder="Cuéntanos un poquito más" />
-            <Button block style={{backgroundColor:'#03a9f4'}} onPress={obj.enviarComentario} ><Text style={{ color: "white" }} >Enviar</Text></Button>
+            <Button block style={{ backgroundColor: '#03a9f4' }} onPress={obj.enviarComentario} ><Text style={{ color: "white" }} >Enviar</Text></Button>
         </Form>
     </View>
 }
@@ -59,69 +72,118 @@ const AddDoctor = (obj) => {
 
 const Doctores = (obj) => {
     var numColor = 0;
-    var firstLetterUserName;
+    var thisliked = false;
     // console.warn(obj.comments)
     // alert(obj.comments)
     // alert(obj.loading)
     // alert(obj.loading + "-" +obj.comments.length)
     if (!obj.loading) {
-        if(obj.comments.length >0)
-        {
-            return obj.comments.map((v, i) => {
+        if (obj.doctores.length > 0) {
+            return obj.doctores.map((v, i) => {
                 numColor = Math.floor(Math.random() * (5 - 0) + 0)
-                // firstLetterUserName = v.usuario.toUpperCase();
-                // alert(numColor)
-                return <List key={i} on >
-                    <ListItem avatar >
+                thisliked = false;
+                if(obj.liked != undefined)
+                {
+                    for(let x=0; x<obj.liked.length;x++)
+                    {
+                        // alert(obj.liked[x].idcentro + " - " + v.id)
+                        if(obj.liked[x].iddoctor == v.id)
+                        {
+                            thisliked = true;
+                            break;
+                        }
+                    }
+                }
+
+                return <Card key={i} >
+                    <CardItem>
+                        <Body>
+                            <Text style={{ fontWeight: "bold" }} >{v.nombres + ' ' + v.apellidos}</Text>
+                            <Text note>{v.centro}</Text>
+                        </Body>
+                    </CardItem>
+
+                    <CardItem>
                         <Left>
-                            {/* <Thumbnail source={{uri: ""}}/> */}
-                            <Avatar size="small" rounded title={v.usuario != undefined ? v.usuario[0].toUpperCase() : ""} activeOpacity={0.7} overlayContainerStyle={{ backgroundColor: obj.colors[numColor] }} />
+                            <Button transparent onPress={() => obj.handleLike(v.id, thisliked)}  >
+                                <Icon style={thisliked ? "" : { color: 'gray' }} name="thumbs-up" />
+                                <Text>{" " + v.likes + " Likes"}</Text>
+                            </Button>
                         </Left>
                         <Body>
-                            <Text style={{ fontWeight: "bold" }} >{v.usuario}</Text>
-                            <Text>{v.recomendado.toUpperCase() + " - " + v.comentario}</Text>
-                            {obj.actualUser == v.usuario ?
-                                <Button block transparent onPress={() => obj.deleteComment(v.id)}><Text>Borrar comentario</Text></Button>
-                                : <Text />}
+                            <Button transparent onPress={() => navigate.push("Commentx", { idCentro: v.id })} >
+                                <Icon style={{ color: "gray" }} name="chatbubbles" />
+                                <Text>Comentarios</Text>
+                            </Button>
                         </Body>
                         <Right>
-                            <Text note>{v.fecha}</Text>
+                            <Button transparent onPress={() => Linking.openURL("https://www.google.com/maps/search/?api=1&query=" + v.nombre + "+Hospital")} >
+                                <Icon style={{ color: "gray" }} name="map" />
+                                <Text> Cómo llegar</Text>
+                            </Button>
                         </Right>
-                    </ListItem>
-                </List>
+                    </CardItem>
+                </Card>
+                // return <List key={i} on >
+                //     <ListItem avatar >
+                //         <Left>
+                //             {/* <Thumbnail source={{uri: ""}}/> */}
+                //             <Avatar size="small" rounded title={v.nombres != undefined ? v.nombres[0].toUpperCase() : ""} activeOpacity={0.7} overlayContainerStyle={{ backgroundColor: obj.colors[numColor] }} />
+                //         </Left>
+                //         <Body>
+                //             <Text style={{ fontWeight: "bold" }} >{v.nombres + ' ' + v.apellidos}</Text>
+                //             <Text>{"CENTRO"}</Text>                            
+                //         </Body>
+                //         <Right>
+                //             <Text note>{"xxx"}</Text>
+                //         </Right>
+                //     </ListItem>
+                // </List>
             })
         } else {
-            return <View  style={{flex:1, flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+            return <View style={{ flex: 1, flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
 
-            <Text  >Sin doctores</Text>
+                <Text  >Sin doctores</Text>
             </View>
         }
-        
+
     } else {
         return <Spinner />
     }
-    
-    
-    
+
+
+
 }
 
 class classComments extends Component {
     state =
         {
-            valueServicio: "0", valueNombre: "0", date: moment(new Date()).format("DD/MM/YYYY"), comment: "",
+            valueServicio: "0", valueEspecialidad: "0", date: moment(new Date()).format("DD/MM/YYYY"), comment: "",
             avatarColors: ["#d32f2f", "#7b1fa2", "#1976d2", "#388e3c", "#ffa000", "#e64a19"],
-            comments: [], username: "", idCentro: "", modal:false, loading:true
+            comments: [], username: "", idCentro: "", modal: false, loading: true,
+            doctor: { nombres: "", apellidos: "", valueEspecialidad: "", valueServicio: "", comentario: "", idCentro: "" },
+            doctores: [], centros: [], liked: []
         }
     handlePickerServicio = (value: string) => {
-        this.setState({ valueServicio: value })
+        var { doctor } = this.state;
+        doctor = { nombres: doctor.nombres, apellidos: doctor.apellidos, valueEspecialidad: doctor.valueEspecialidad, valueServicio: value, comentario: doctor.comentario, idCentro: doctor.idCentro }
+        // this.setState({ valueServicio: value })
+        this.setState({ doctor })
     }
-    handlePickerNombre = (value: string) => {
-        this.setState({ valueNombre: value })
+    handlePickerEspecialidad = (value: string) => {
+        var { doctor } = this.state;
+        doctor = { nombres: doctor.nombres, apellidos: doctor.apellidos, valueEspecialidad: value, valueServicio: doctor.valueServicio, comentario: doctor.comentario, idCentro: doctor.idCentro }
+        this.setState({ doctor })
+    }
+    handlePickerCentro = (value: string) => {
+        var { doctor } = this.state;
+        doctor = { nombres: doctor.nombres, apellidos: doctor.apellidos, valueEspecialidad: doctor.valueEspecialidad, valueServicio: doctor.valueServicio, comentario: doctor.comentario, idCentro: value }
+        this.setState({ doctor })
     }
 
     componentDidMount() {
-        var idCentro = this.props.navigation.getParam("idCentro");
-        this.setState({ idCentro })
+        // var idCentro = this.props.navigation.getParam("idCentro");
+        // this.setState({ idCentro })
         // alert(idCentro)
         AsyncStorage.getItem("username", (err, result) => {
             if (!err) {
@@ -131,48 +193,50 @@ class classComments extends Component {
             }
         })
 
-        this.getComentarios(idCentro);
+        this.getDoctores();
+        this.getCentros();
+        this.getMisLikes();
 
     }
 
-    deleteComment = (idComment) => {
-        const { idCentro } = this.state;
-        // alert(idComment)
-        this.fetchDeleteComment(idComment, idCentro)
-            .then(res => this.setState({ comments: res }))
-            .catch(err => {
-                console.log("Error borrando comentario: " + err);
-                alert("Ha ocurrido un error eliminando el comentario")
-            })
-    }
 
-    fetchDeleteComment = async (idComment, idCentro) => {
-        const response = await fetch("https://serverquedoctor.herokuapp.com/comentarios/centro/eliminar?id=" + idComment + "&fkCentro=" + idCentro);
-        const body = response.json();
-        if (response.status != 200) throw Error(body.message)
-        return body;
-    }
     // const {usuario, fecha, comentario, fkCentro} = req.query;
     fetchAgregar = async () => {
-        const { valueServicio, valueNombre, date, comment, idCentro } = this.state;
+        const { doctor, username } = this.state;
         // alert("x")
-        const response = await fetch("https://serverquedoctor.herokuapp.com/comentarios/centro/agregar?fkCentro=" + idCentro + "&fecha=" + date + "&comentario=" + comment + "&usuario=" + valueNombre + "&recomendado=" + valueServicio);
+        // const {nombres, apellidos, especialidad, verificado, agregadoPor, idCentro} = req.query;
+        const response = await fetch("https://serverquedoctor.herokuapp.com/doctores/agregar?nombres=" + doctor.nombres + "&apellidos=" + doctor.apellidos + "&especialidad=" + doctor.valueEspecialidad + "&verificado=" + false + "&agregadoPor=" + username + "&idCentro=" + doctor.idCentro);
         const body = response.json();
         if (response.status != 200) throw Error(body.message)
         return body;
     }
 
-    getComentarios = (idCentro) => {
-        this.fetchComentarios(idCentro)
-            .then(res => this.setState({ comments: res, loading:false }))
+    getDoctores = () => {
+        this.fetchDoctores()
+            .then(res => this.setState({ doctores: res, loading: false }))
             .catch(err => {
                 alert("Error obteniendo comentarios")
                 console.log(err)
             })
     }
 
-    fetchComentarios = async (idCentro) => {
-        const response = await fetch("https://serverquedoctor.herokuapp.com/comentarios/centros?idCentro=" + idCentro);
+    fetchDoctores = async () => {
+        const response = await fetch("https://serverquedoctor.herokuapp.com/doctores");
+        const body = response.json();
+        if (response.status != 200) throw Error(body.message)
+        return body;
+    }
+    getCentros = () => {
+        this.fetchCentros()
+            .then(res => this.setState({ centros: res }))
+            .catch(err => {
+                alert("Error obteniendo comentarios")
+                console.log(err)
+            })
+    }
+
+    fetchCentros = async () => {
+        const response = await fetch("https://serverquedoctor.herokuapp.com/centros");
         const body = response.json();
         if (response.status != 200) throw Error(body.message)
         return body;
@@ -189,6 +253,15 @@ class classComments extends Component {
             })
     }
 
+    handleLike = (idDoctor) => {
+        this.fetchLike(idDoctor)
+            .then(res => {
+                this.setState({ doctores: res })
+                this.getMisLikes();
+            })
+            .catch(err => console.log(err));
+
+    }
     handleComment = (text) => {
         this.setState({ comment: text })
     }
@@ -197,52 +270,67 @@ class classComments extends Component {
         header: null
     }
 
-    especialidades = (especialidades) =>
-    {
-        // return [1,2].map((v,i) => {
-           return especialidades.map((v,i) => {
+    especialidades = (especialidades) => {
+        return especialidades.map((v, i) => {
 
-               return <Picker.Item label={v} value={v} />
-           })
-                
-        // })
+            return <Picker.Item label={v} value={v} />
+        })
+    }
+    centros = (centros) => {
+        return centros.map((v, i) => {
+
+            return <Picker.Item label={v.nombre} value={v.nombre} />
+        })
+    }
+
+    getMisLikes = () => {
+        this.fetchMisLikes()
+            .then(res => this.setState({ liked: res }))
+            .catch(err => console.log(err));
+    }
+
+    fetchMisLikes = async () => {
+        const response = await fetch("https://serverquedoctor.herokuapp.com/doctores/misLikes");
+        const body = response.json();
+        if (response.status != 200) throw Error(body.message)
+        return body;
     }
 
     render() {
-        const { valueServicio, valueNombre, comment, avatarColors, username, comments, modal, loading } = this.state
-        const especialidades = ["Seleccionar especialidad","Pediatra"]
+        const { doctor, avatarColors,liked, doctores, username, centros, modal, loading } = this.state
+        const especialidades = ["Seleccionar especialidad", "Pediatra"]
         // console.warn(comments)
         return (
             <Container style={{ backgroundColor: "white" }}>
-                 <ScrollView  >
-                
-                     {/* <AddDoctor comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
-                         valueServicio={valueServicio} valueNombre={valueNombre} username={username} /> */}
-                     <Divider />
-                     <Doctores loading={loading} actualUser={username} deleteComment={this.deleteComment} colors={avatarColors} comments={comments} />
-                 </ScrollView>
-                <View style={{flex: 1}} >
-                <Fab
-                    active={this.state.active}
-                    //#03a9f4
-                    containerStyle={{}}
-                    style={{ backgroundColor: '#03a9f4' }}
-                    position="bottomRight"
-                    onPress={() => this.setState({ modal:true })}>
-                    <Icon  type="MaterialCommunityIcons" name="comment-plus-outline"  />
+                <ScrollView  >
 
-                </Fab>
+                    {/* <AddDoctor comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
+                         valueServicio={valueServicio} valueNombre={valueNombre} username={username} /> */}
+                    <Divider />
+                    <Doctores liked={liked} loading={loading} actualUser={username} colors={avatarColors} doctores={doctores} />
+                </ScrollView>
+                <View style={{ flex: 1 }} >
+                    <Fab
+                        active={this.state.active}
+                        //#03a9f4
+                        containerStyle={{}}
+                        style={{ backgroundColor: '#03a9f4' }}
+                        position="bottomRight"
+                        onPress={() => this.setState({ modal: true })}>
+                        <Icon type="MaterialCommunityIcons" name="comment-plus-outline" />
+
+                    </Fab>
                 </View>
                 <Modal
-          isVisible={modal}
-          animationIn="slideInLeft"
-          animationOut="slideOutRight"
-          onBackdropPress={() => this.setState({ modal: false })}
-        >
-          <AddDoctor especialidades={this.especialidades(especialidades)} comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
-                         valueServicio={valueServicio} valueNombre={valueNombre} username={username} />
-        </Modal>
-            </Container>            
+                    isVisible={modal}
+                    animationIn="slideInLeft"
+                    animationOut="slideOutRight"
+                    onBackdropPress={() => this.setState({ modal: false })}
+                >
+                    <AddDoctor centros={this.centros(centros)} especialidades={this.especialidades(especialidades)} comment={doctor.comentario} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
+                        valueServicio={doctor.valueServicio} valueEspecialidad={doctor.valueEspecialidad} username={username} />
+                </Modal>
+            </Container>
         )
     }
 }
@@ -257,19 +345,19 @@ const RootStack = createStackNavigator(
 )
 
 const styles = StyleSheet.create({
-  modalContent: {
-    
-    backgroundColor: "white",
-    padding: 22,
-    // justifyContent: "center",
-    // alignItems: "center",
-    borderRadius: 4,
-    // borderColor: "rgba(0, 0, 0, 0.1)"
-  },
+    modalContent: {
+
+        backgroundColor: "white",
+        padding: 22,
+        // justifyContent: "center",
+        // alignItems: "center",
+        borderRadius: 4,
+        // borderColor: "rgba(0, 0, 0, 0.1)"
+    },
 })
 
-export default class App extends Component {    
-    render() {        
-        return <RootStack/>
+export default class App extends Component {
+    render() {
+        return <RootStack />
     }
 }
