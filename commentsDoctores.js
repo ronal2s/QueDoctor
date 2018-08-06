@@ -114,8 +114,7 @@ const Comments2 = (obj) => {
     // alert(obj.loading + "-" +obj.comments.length)
     // console.warn(obj.comments)
     if (!obj.loading) {
-        if(obj.comments.length >0)
-        {
+        if (obj.comments.length > 0) {
             return obj.comments.map((v, i) => {
                 numColor = Math.floor(Math.random() * (5 - 0) + 0)
                 // firstLetterUserName = v.usuario.toUpperCase();
@@ -140,18 +139,18 @@ const Comments2 = (obj) => {
                 </List>
             })
         } else {
-            return <View  style={{flex:1, flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+            return <View style={{ flex: 1, flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
 
-            <Text  >Sin comentarios</Text>
+                <Text  >Sin comentarios</Text>
             </View>
         }
-        
+
     } else {
         return <Spinner />
     }
-    
-    
-    
+
+
+
 }
 
 export default class classComments extends Component {
@@ -159,10 +158,10 @@ export default class classComments extends Component {
         {
             valueServicio: "0", valueNombre: "0", date: moment(new Date()).format("DD/MM/YYYY"), comment: "",
             avatarColors: ["#d32f2f", "#7b1fa2", "#1976d2", "#388e3c", "#ffa000", "#e64a19"],
-            comments: [], username: "", idDoctor: "", modal:false, loading:true
+            comments: [], username: "", idDoctor: "", modal: false, loading: true
         }
     handlePickerServicio = (value: string) => {
-        alert(value)
+        // alert(value)
         this.setState({ valueServicio: value })
     }
     handlePickerNombre = (value: string) => {
@@ -214,7 +213,7 @@ export default class classComments extends Component {
 
     getComentarios = (idDoctor) => {
         this.fetchComentarios(idDoctor)
-            .then(res => this.setState({ comments: res, loading:false }))
+            .then(res => this.setState({ comments: res, loading: false }))
             .catch(err => {
                 alert("Error obteniendo comentarios")
                 console.log(err)
@@ -229,71 +228,87 @@ export default class classComments extends Component {
     }
 
     agregarComentario = (idDoctor) => {
-        this.fetchAgregar(idDoctor)
-            .then(res => {
-                this.setState({ comments: res, comment: "", valueServicio: "0", modal: false })
-            })
-            .catch(err => {
-                console.log(err);
-                alert("Error obteniendo nuevos comentarios")
-            })
+        const { valueServicio, valueNombre, date, comment } = this.state;
+        if (valueNombre != 0) {
+            if (valueServicio != 0) {
+                if (comment != "") {
+                    this.fetchAgregar(idDoctor)
+                        .then(res => {
+                            this.setState({ comments: res, comment: "", valueServicio: "0", modal: false })
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            alert("Error obteniendo nuevos comentarios")
+                        })
+                } else {
+                    alert("El comentario no puede estar vacío")
+                }
+            } else {
+                alert("Debe seleccionar que tal fue el servicio")
+            }
+        } else {
+            alert("Debe seleccionar si ser anónimo o el nombre registrado")
+        }
+
     }
 
-    handleComment = (text) => {
-        this.setState({ comment: text })
-    }
+
+
+handleComment = (text) => {
+    this.setState({ comment: text })
+}
 
     static navigationOptions = {
-        header: null
-    }
+    header: null
+}
 
-    render() {
-        const { valueServicio, valueNombre, comment, avatarColors, username, comments, modal, loading } = this.state
-        // console.warn(comments)
-        // alert(comments[0])
-        return (
-            <Container style={{ backgroundColor: "white" }}>
-                 <ScrollView  >
-                
-                     {/* <AddComment2 comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
+render() {
+    const { valueServicio, valueNombre, comment, avatarColors, username, comments, modal, loading } = this.state
+    // console.warn(comments)
+    // alert(comments[0])
+    return (
+        <Container style={{ backgroundColor: "white" }}>
+            <ScrollView  >
+
+                {/* <AddComment2 comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
                          valueServicio={valueServicio} valueNombre={valueNombre} username={username} /> */}
-                     <Divider />
-                     <Comments2 loading={loading} actualUser={username} deleteComment={this.deleteComment} colors={avatarColors} comments={comments} />
-                 </ScrollView>
-                <View style={{flex: 1}} >
+                <Divider />
+                <Comments2 loading={loading} actualUser={username} deleteComment={this.deleteComment} colors={avatarColors} comments={comments} />
+            </ScrollView>
+            <View style={{ flex: 1 }} >
                 <Fab
                     active={this.state.active}
                     //#03a9f4
                     containerStyle={{}}
                     style={{ backgroundColor: '#03a9f4' }}
                     position="bottomRight"
-                    onPress={() => this.setState({ modal:true })}>
-                    <Icon  type="MaterialCommunityIcons" name="comment-plus-outline"  />
+                    onPress={() => this.setState({ modal: true })}>
+                    <Icon type="MaterialCommunityIcons" name="comment-plus-outline" />
 
                 </Fab>
-                </View>
-                <Modal
-          isVisible={modal}
-          animationIn="slideInLeft"
-          animationOut="slideOutRight"
-          onBackdropPress={() => this.setState({ modal: false })}
-        >
-          <AddComment2  comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
-                         valueServicio={valueServicio} valueNombre={valueNombre} username={username} />
-        </Modal>
-            </Container>            
-        )
-    }
+            </View>
+            <Modal
+                isVisible={modal}
+                animationIn="slideInLeft"
+                animationOut="slideOutRight"
+                onBackdropPress={() => this.setState({ modal: false })}
+            >
+                <AddComment2 comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
+                    valueServicio={valueServicio} valueNombre={valueNombre} username={username} />
+            </Modal>
+        </Container>
+    )
+}
 }
 
 const styles = StyleSheet.create({
-  modalContent: {
-    
-    backgroundColor: "white",
-    padding: 22,
-    // justifyContent: "center",
-    // alignItems: "center",
-    borderRadius: 4,
-    // borderColor: "rgba(0, 0, 0, 0.1)"
-  },
+    modalContent: {
+
+        backgroundColor: "white",
+        padding: 22,
+        // justifyContent: "center",
+        // alignItems: "center",
+        borderRadius: 4,
+        // borderColor: "rgba(0, 0, 0, 0.1)"
+    },
 })

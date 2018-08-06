@@ -12,10 +12,10 @@ const AddDoctor = (obj) => {
 
         <Text style={{ textAlign: "center" }} >¿Quién fue tú Doctor?</Text>
         <Item>
-            <Input placeholder="Nombre del doctor" value={obj.nombres} onChangeText={(text) => obj.handleFormChange(text, "nombres")}/>
+            <Input placeholder="Nombre del doctor" value={obj.nombres} onChangeText={(text) => obj.handleFormChange(text, "nombres")} />
         </Item>
         <Item>
-            <Input placeholder="Apellidos" value={obj.apellidos} onChangeText={(text) => obj.handleFormChange(text, "apellidos")}/>
+            <Input placeholder="Apellidos" value={obj.apellidos} onChangeText={(text) => obj.handleFormChange(text, "apellidos")} />
         </Item>
         <Item picker>
             <Picker
@@ -66,49 +66,46 @@ const AddDoctor = (obj) => {
 
         {/* <Content> */}
         <Form>
-            <Textarea rowSpan={5} value={obj.comment} onChangeText={(text) => obj.handleFormChange(text, "comentario")} placeholder="Cuéntanos un poquito más" />
+            <Textarea rowSpan={2} value={obj.comment} onChangeText={(text) => obj.handleFormChange(text, "comentario")} placeholder="Cuéntanos un poquito más" />
             <Button block style={{ backgroundColor: '#03a9f4' }} onPress={obj.agregarDoctor} ><Text style={{ color: "white" }} >Enviar</Text></Button>
         </Form>
     </View>
 }
 
 
-const Doctores = (obj) => {    
-    var thisliked = false;    
+const Doctores = (obj) => {
+    var thisliked = false;
     const navigate = obj.navigate;
     if (!obj.loading) {
         if (obj.doctores.length > 0) {
             return obj.doctores.map((v, i) => {
                 numColor = Math.floor(Math.random() * (5 - 0) + 0)
                 thisliked = false;
-                if(obj.liked != undefined)
-                {
-                    for(let x=0; x<obj.liked.length;x++)
-                    {
+                if (obj.liked != undefined) {
+                    for (let x = 0; x < obj.liked.length; x++) {
                         // alert(obj.liked[x].idcentro + " - " + v.id)
-                        if(obj.liked[x].iddoctor == v.id)
-                        {
+                        if (obj.liked[x].iddoctor == v.id) {
                             thisliked = true;
                             break;
                         }
                     }
                 }
-                
+
 
                 return <Card key={i} >
-                    <CardItem style={{backgroundColor: v.verificado?"white":"#ffab40"}} >
+                    <CardItem style={{ backgroundColor: v.verificado ? "white" : "#ffab40" }} >
                         <Body>
                             <Text style={{ fontWeight: "bold" }} >{v.nombres + ' ' + v.apellidos}</Text>
                             <Text note>{v.especialidad + " en el centro médico " + v.centro}</Text>
                         </Body>
                         <Right>
                             <Button transparent onPress={() => alert("Un nombre verificado es aquel que hemos comprobado que está escrito correctamente y además, que trabaja en el lugar mencionado")}>
-                                <Text>{v.verificado?"Nombre verificado":"Nombre no verificado"}</Text>
-                            </Button>                            
+                                <Text>{v.verificado ? "Nombre verificado" : "Nombre no verificado"}</Text>
+                            </Button>
                         </Right>
                     </CardItem>
 
-                    <CardItem style={{backgroundColor: v.verificado?"white":"#ffab40"}}>
+                    <CardItem style={{ backgroundColor: v.verificado ? "white" : "#ffab40" }}>
                         <Left>
                             <Button transparent onPress={() => obj.handleLike(v.id)}  >
                                 <Icon style={thisliked ? "" : { color: 'gray' }} name="thumbs-up" />
@@ -167,9 +164,9 @@ class classComments extends Component {
             avatarColors: ["#d32f2f", "#7b1fa2", "#1976d2", "#388e3c", "#ffa000", "#e64a19"],
             comments: [], username: "", idCentro: "", modal: false, loading: true,
             doctor: { nombres: "", apellidos: "", valueEspecialidad: "", valueServicio: "", comentario: "", idCentro: "" },
-            doctores: [], centros: [{id:-1,nombre:"Seleccionar centro médico"}], liked: [], date: moment(new Date()).format("DD/MM/YYYY"),
+            doctores: [], centros: [{ id: -1, nombre: "Seleccionar centro médico" }], liked: [], date: moment(new Date()).format("DD/MM/YYYY"),
         }
-    
+
 
     componentDidMount() {
         // var idCentro = this.props.navigation.getParam("idCentro");
@@ -178,7 +175,7 @@ class classComments extends Component {
         AsyncStorage.getItem("username", (err, result) => {
             if (!err) {
                 this.setState({ username: result })
-                fetch("https://serverquedoctor.herokuapp.com/usuarioActual?usuario="+result);
+                fetch("https://serverquedoctor.herokuapp.com/usuarioActual?usuario=" + result);
             } else {
                 console.error(err)
             }
@@ -196,7 +193,7 @@ class classComments extends Component {
         const { doctor, username, date } = this.state;
         // alert("x")
         // const {nombres, apellidos, especialidad, verificado, agregadoPor, idCentro} = req.query;
-        const response = await fetch("https://serverquedoctor.herokuapp.com/doctores/agregar?nombres=" + doctor.nombres + "&apellidos=" + doctor.apellidos + "&especialidad=" + doctor.valueEspecialidad + "&verificado=" + false + "&agregadoPor=" + username + "&idCentro=" + doctor.idCentro + "&recomendado="+doctor.valueServicio+"&fecha="+date+"&comentario="+doctor.comentario);
+        const response = await fetch("https://serverquedoctor.herokuapp.com/doctores/agregar?nombres=" + doctor.nombres + "&apellidos=" + doctor.apellidos + "&especialidad=" + doctor.valueEspecialidad + "&verificado=" + false + "&agregadoPor=" + username + "&idCentro=" + doctor.idCentro + "&recomendado=" + doctor.valueServicio + "&fecha=" + date + "&comentario=" + doctor.comentario);
         const body = response.json();
         if (response.status != 200) throw Error(body.message)
         return body;
@@ -220,9 +217,11 @@ class classComments extends Component {
     getCentros = () => {
         this.fetchCentros()
             .then(res => {
-                var {centros} = this.state;
-                centros.concat(res) 
-                this.setState({centros })
+                var { centros } = this.state;
+                // centros.concat(res)
+                // centros.unshift(res)
+                Array.prototype.push.apply(centros,res);
+                this.setState({ centros })
             })
             .catch(err => {
                 alert("Error obteniendo comentarios")
@@ -237,7 +236,7 @@ class classComments extends Component {
         return body;
     }
 
-    
+
 
     handleLike = (idDoctor) => {
         this.fetchLike(idDoctor)
@@ -248,11 +247,10 @@ class classComments extends Component {
             .catch(err => console.log(err));
     }
 
-    fetchLike = async(idDoctor) =>
-    {
-        const response = await fetch("https://serverquedoctor.herokuapp.com/doctores/like?idDoctor="+idDoctor);
+    fetchLike = async (idDoctor) => {
+        const response = await fetch("https://serverquedoctor.herokuapp.com/doctores/like?idDoctor=" + idDoctor);
         const body = response.json();
-        if(response.status != 200) throw Error(body.message)
+        if (response.status != 200) throw Error(body.message)
         return body;
     }
 
@@ -266,12 +264,11 @@ class classComments extends Component {
         header: null
     }
 
-    handleFormChange = (text, obj) =>
-    {
-        var {doctor} = this.state;
+    handleFormChange = (text, obj) => {
+        var { doctor } = this.state;
         doctor[obj] = text;
         // alert(doctor[obj])
-        this.setState({doctor})
+        this.setState({ doctor })
     }
 
     especialidades = (especialidades) => {
@@ -280,7 +277,7 @@ class classComments extends Component {
             return <Picker.Item label={v} value={v} />
         })
     }
-    centros = (centros) => {        
+    centros = (centros) => {
         return centros.map((v, i) => {
 
             return <Picker.Item label={v.nombre} value={v.id} />
@@ -293,14 +290,39 @@ class classComments extends Component {
             .catch(err => console.log(err));
     }
     agregarDoctor = () => {
-        var {doctor} = this.state;
+        var { doctor } = this.state;
         // alert(doctor.idCentro)
-        this.fetchAgregar()
-            .then(res => this.setState({ doctores: res, modal: false }))
-            .catch(err => {
-                console.log(err)
-                alert("Error, intentar más tarde")
-            });
+        if (doctor.nombres != "") {
+            if (doctor.apellidos != "") {
+                if (doctor.valueEspecialidad != "") {
+                    if (doctor.idCentro != "") {//Esto no está funcionando
+                        if (doctor.valueServicio != "") {
+                            if (doctor.comentario != "") {
+                                this.fetchAgregar()
+                                    .then(res => this.setState({ doctores: res, modal: false }))
+                                    .catch(err => {
+                                        console.log(err)
+                                        alert("Error, intentar más tarde")
+                                    });
+                            } else {
+                                alert("Favor contarnos por qué es importante que ese Doctor esté aquí")
+                            }
+                        } else {
+                            alert("Debe seleccionar que tal fue la experiencia con su Doctor")
+                        }
+                    } else {
+                        alert("Debe seleccionar el centro médico donde labora el Doctor")
+                    }
+                } else {
+                    alert("Debe seleccionar cual es la especialidad del Doctor")
+                }
+            } else {
+                alert("El campo de apellidos no debe estar vacío")
+            }
+        } else {
+            alert("Debe escribir el nombre del Doctor")
+        }
+
     }
 
     fetchMisLikes = async () => {
@@ -311,7 +333,7 @@ class classComments extends Component {
     }
 
     render() {
-        const { doctor, avatarColors,liked, doctores, username, centros, modal, loading } = this.state
+        const { doctor, avatarColors, liked, doctores, username, centros, modal, loading } = this.state
         const especialidades = ["Seleccionar especialidad", "Pediatra"]
         // console.warn(comments)
         return (
@@ -321,7 +343,7 @@ class classComments extends Component {
                     {/* <AddDoctor comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
                          valueServicio={valueServicio} valueNombre={valueNombre} username={username} /> */}
                     <Divider />
-                    <Doctores navigate={this.props.navigation} liked={liked}  handleLike={this.handleLike} loading={loading} actualUser={username} colors={avatarColors} doctores={doctores} />
+                    <Doctores navigate={this.props.navigation} liked={liked} handleLike={this.handleLike} loading={loading} actualUser={username} colors={avatarColors} doctores={doctores} />
                 </ScrollView>
                 <View style={{ flex: 1 }} >
                     <Fab
@@ -341,9 +363,9 @@ class classComments extends Component {
                     animationOut="slideOutRight"
                     onBackdropPress={() => this.setState({ modal: false })}
                 >
-                    <AddDoctor centros={this.centros(centros)} especialidades={this.especialidades(especialidades)} comment={doctor.comentario} 
-                    handleComment={this.handleComment} agregarDoctor={this.agregarDoctor} handlePickerCentro={this.handlePickerCentro} 
-                    handlePickerServicio={this.handlePickerServicio} nombres={doctor.nombres} apellidos={doctor.apellidos} handleFormChange={this.handleFormChange}
+                    <AddDoctor centros={this.centros(centros)} especialidades={this.especialidades(especialidades)} comment={doctor.comentario}
+                        handleComment={this.handleComment} agregarDoctor={this.agregarDoctor} handlePickerCentro={this.handlePickerCentro}
+                        handlePickerServicio={this.handlePickerServicio} nombres={doctor.nombres} apellidos={doctor.apellidos} handleFormChange={this.handleFormChange}
                         valueServicio={doctor.valueServicio} valueEspecialidad={doctor.valueEspecialidad} valueCentro={doctor.idCentro} username={username} />
                 </Modal>
             </Container>
