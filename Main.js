@@ -10,6 +10,7 @@ import Modal from "react-native-modal";
 import Home2 from './home'
 import ContentDrawer from './contentDrawer'
 import Centros from './centros'
+import Doctores from './doctores'
 import CentrosSantiago from './centrosSantiago'
 import CentrosSantoDomingo from './centrosSantoDomingo'
 import CentrosLaVega from './centrosLaVega'
@@ -126,7 +127,7 @@ class Main extends Component {
         >
           {this.renderModalContent()}
         </Modal>
-        <Home2 centros={() => navigate.push("Centros", {city: "all"})} />
+        <Home2 centros={() => navigate.push("Centros", {city: "all"})} doctores={() => navigate.navigate("Doctores")} />
       </Drawer >
     );
   }
@@ -136,6 +137,7 @@ const RootStack = createStackNavigator(
   {
     Home: Main,
     Centros: Centros,
+    Doctores: Doctores,
     CentrosSantiago: CentrosSantiago,
     CentrosSantoDomingo: CentrosSantoDomingo,
     CentrosLaVega: CentrosLaVega,

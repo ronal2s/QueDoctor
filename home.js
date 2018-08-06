@@ -9,7 +9,7 @@ import Modal from "react-native-modal";
 const HomeCards = (obj) => {
   return <View flex={1} style={styles.home} >
     <Card>
-      <CardItem button >
+      <CardItem button button onPress={obj.doctores} >
         <ImageBackground blurRadius={1} resizeMode='cover' source={{ uri: "http://www.besthealthmag.ca/wp-content/uploads/2016/01/doctor_2.jpg" }} style={styles.homeImages}>
           <View flex={1} style={styles.boxes} >
             {/* <TouchableOpacity> */}
@@ -103,12 +103,12 @@ export default class Home extends Component {
   }  
 
   render() {
-    const { centros } = this.props
+    const { centros, doctores } = this.props
     const { modal } = this.state    
     
     return (
       <View style={{ flex: 1 }} >
-        <HomeCards centros={centros} />
+        <HomeCards centros={centros} doctores={doctores} />
         
       </View>
     )
