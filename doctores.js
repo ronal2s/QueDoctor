@@ -70,13 +70,8 @@ const AddDoctor = (obj) => {
 }
 
 
-const Doctores = (obj) => {
-    var numColor = 0;
-    var thisliked = false;
-    // console.warn(obj.comments)
-    // alert(obj.comments)
-    // alert(obj.loading)
-    // alert(obj.loading + "-" +obj.comments.length)
+const Doctores = (obj) => {    
+    var thisliked = false;    
     if (!obj.loading) {
         if (obj.doctores.length > 0) {
             return obj.doctores.map((v, i) => {
@@ -94,18 +89,24 @@ const Doctores = (obj) => {
                         }
                     }
                 }
+                
 
                 return <Card key={i} >
-                    <CardItem>
+                    <CardItem style={{backgroundColor: v.verificado?"white":"#ffab40"}} >
                         <Body>
                             <Text style={{ fontWeight: "bold" }} >{v.nombres + ' ' + v.apellidos}</Text>
-                            <Text note>{v.centro}</Text>
+                            <Text note>{v.especialidad + " en el centro médico " + v.centro}</Text>
                         </Body>
+                        <Right>
+                            <Button transparent onPress={() => alert("Un nombre verificado es aquel que hemos comprobado que está escrito correctamente y además, que trabaja en el lugar mencionado")}>
+                                <Text>{v.verificado?"Nombre verificado":"Nombre no verificado"}</Text>
+                            </Button>                            
+                        </Right>
                     </CardItem>
 
-                    <CardItem>
+                    <CardItem style={{backgroundColor: v.verificado?"white":"#ffab40"}}>
                         <Left>
-                            <Button transparent onPress={() => obj.handleLike(v.id, thisliked)}  >
+                            <Button transparent onPress={() => obj.handleLike(v.id)}  >
                                 <Icon style={thisliked ? "" : { color: 'gray' }} name="thumbs-up" />
                                 <Text>{" " + v.likes + " Likes"}</Text>
                             </Button>
@@ -117,7 +118,7 @@ const Doctores = (obj) => {
                             </Button>
                         </Body>
                         <Right>
-                            <Button transparent onPress={() => Linking.openURL("https://www.google.com/maps/search/?api=1&query=" + v.nombre + "+Hospital")} >
+                            <Button transparent onPress={() => Linking.openURL("https://www.google.com/maps/search/?api=1&query=" + v.centro + "+Hospital")} >
                                 <Icon style={{ color: "gray" }} name="map" />
                                 <Text> Cómo llegar</Text>
                             </Button>
@@ -260,8 +261,16 @@ class classComments extends Component {
                 this.getMisLikes();
             })
             .catch(err => console.log(err));
-
     }
+
+    fetchLike = async(idDoctor) =>
+    {
+        const response = await fetch("https://serverquedoctor.herokuapp.com/doctores/like?idDoctor="+idDoctor);
+        const body = response.json();
+        if(response.status != 200) throw Error(body.message)
+        return body;
+    }
+
     handleComment = (text) => {
         this.setState({ comment: text })
     }
@@ -307,7 +316,7 @@ class classComments extends Component {
                     {/* <AddDoctor comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
                          valueServicio={valueServicio} valueNombre={valueNombre} username={username} /> */}
                     <Divider />
-                    <Doctores liked={liked} loading={loading} actualUser={username} colors={avatarColors} doctores={doctores} />
+                    <Doctores liked={liked}  handleLike={this.handleLike} loading={loading} actualUser={username} colors={avatarColors} doctores={doctores} />
                 </ScrollView>
                 <View style={{ flex: 1 }} >
                     <Fab
