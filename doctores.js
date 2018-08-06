@@ -292,7 +292,7 @@ class classComments extends Component {
         var {doctor} = this.state;
         // alert(doctor.idCentro)
         this.fetchAgregar()
-            .then(res => this.setState({ doctores: res }))
+            .then(res => this.setState({ doctores: res, modal: false }))
             .catch(err => {
                 console.log(err)
                 alert("Error, intentar más tarde")
