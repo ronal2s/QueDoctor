@@ -13,7 +13,7 @@ export default class contentDrawer extends Component {
         return(
             <View flex={1} >
   <View flex={1} style={styles.caja1} >
-    <ImageBackground blurRadius={1} source={{ uri: "https://i1.wp.com/elnuevodiario.com.do/wp-content/uploads/2018/07/Santiago-de-los-Caballeros-1024x550.jpg" }} style={[styles.drawerImages, {marginTop: -50}]}>
+    <ImageBackground blurRadius={1} source={require("./santiago.jpg") } style={[styles.drawerImages, {marginTop: -50}]}>
       <View flex={1} style={styles.optionsCity} >
         <TouchableOpacity onPress={centrosSantago} >
           <Text style={[styles.drawerTitles, { marginTop: 110 }]} >Santiago</Text>
@@ -22,7 +22,7 @@ export default class contentDrawer extends Component {
     </ImageBackground>
   </View>
   <View flex={1} style={styles.caja1} >
-    <ImageBackground blurRadius={1} source={{ uri: "http://eldia.com.do/wp-content/uploads/2015/08/santo-domingo.jpg" }} style={[styles.drawerImages, {marginTop: -10}]}>
+    <ImageBackground blurRadius={1} source={require("./santodomingo.jpg")} style={[styles.drawerImages, {marginTop: -10}]}>
       <View flex={1} style={styles.optionsCity} >
         <TouchableOpacity onPress={centrosSantoDomingo} >
           <Text style={[styles.drawerTitles, { marginVertical: 60 }]} >Santo Domingo</Text>
@@ -31,7 +31,7 @@ export default class contentDrawer extends Component {
     </ImageBackground>
   </View>
   <View flex={1} style={styles.caja1} >
-    <ImageBackground blurRadius={1} source={{ uri: "https://acento.com.do/wp-content/uploads/G0169463.jpg" }} style={[styles.drawerImages]}>
+    <ImageBackground blurRadius={1} source={require("./lavega.jpg")} style={[styles.drawerImages]}>
       <View flex={1} style={styles.optionsCity} >
         <TouchableOpacity onPress={centrosLaVega} >
           <Text style={[styles.drawerTitles, { marginVertical: 60 }]} >La vega</Text>
@@ -40,7 +40,7 @@ export default class contentDrawer extends Component {
     </ImageBackground>
   </View>
   <View flex={1} style={styles.caja1} >
-    <ImageBackground blurRadius={1} source={{ uri: "https://www.resumendesalud.net/images/macoris.jpg" }} style={styles.drawerImages}>
+    <ImageBackground blurRadius={1} source={require("./macoris.jpg")} style={styles.drawerImages}>
       <View flex={1} style={styles.optionsCity} >
         <TouchableOpacity onPress={centrosMacoris}>
           <Text style={[styles.drawerTitles, { marginVertical: 60 }]} >Macoris</Text>
