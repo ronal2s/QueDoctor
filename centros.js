@@ -84,7 +84,7 @@ class Centros extends Component
                 this.setState({actualUser: result});
                 AsyncStorage.getItem("userCode", (err, result) => {
                     this.setState({userCode: result}); 
-                    fetch("https://serverquedoctor.herokuapp.com/usuarioActual?usuario="+result+"&code="+result);
+                    fetch("https://serverquedoctor.herokuapp.com/usuarioActual?usuario="+this.state.actualUser+"&code="+this.state.userCode);
                 })
                 
             }

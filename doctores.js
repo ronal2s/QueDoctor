@@ -176,7 +176,11 @@ class classComments extends Component {
         AsyncStorage.getItem("username", (err, result) => {
             if (!err) {
                 this.setState({ username: result })
-                fetch("https://serverquedoctor.herokuapp.com/usuarioActual?usuario=" + result);
+                AsyncStorage.getItem("userCode", (err, result) => {
+                    this.setState({userCode: result})
+                    fetch("https://serverquedoctor.herokuapp.com/usuarioActual?usuario="+this.state.username+"&code="+this.state.userCode);
+                    
+                })
             } else {
                 console.error(err)
             }

@@ -128,7 +128,7 @@ const Comments2 = (obj) => {
                         <Body>
                             <Text style={{ fontWeight: "bold" }} >{v.usuario}</Text>
                             <Text>{v.recomendado.toUpperCase() + " - " + v.comentario}</Text>
-                            {obj.actualUser == v.usuario ?
+                            {obj.userCode == v.usercode ?
                                 <Button block transparent onPress={() => obj.deleteComment(v.id)}><Text>Borrar comentario</Text></Button>
                                 : <Text />}
                         </Body>
@@ -158,7 +158,7 @@ export default class classComments extends Component {
         {
             valueServicio: "0", valueNombre: "0", date: moment(new Date()).format("DD/MM/YYYY"), comment: "",
             avatarColors: ["#d32f2f", "#7b1fa2", "#1976d2", "#388e3c", "#ffa000", "#e64a19"],
-            comments: [], username: "", idDoctor: "", modal: false, loading: true
+            comments: [], username: "", idDoctor: "", modal: false, loading: true, userCode:""
         }
     handlePickerServicio = (value: string) => {
         // alert(value)
@@ -175,6 +175,11 @@ export default class classComments extends Component {
         AsyncStorage.getItem("username", (err, result) => {
             if (!err) {
                 this.setState({ username: result })
+                AsyncStorage.getItem("userCode", (err, result) => {
+                    this.setState({userCode: result})
+                    fetch("https://serverquedoctor.herokuapp.com/usuarioActual?usuario="+this.state.actualUser+"&code="+this.state.userCode);
+                    
+                })
             } else {
                 console.error(err)
             }
@@ -203,9 +208,9 @@ export default class classComments extends Component {
     }
     // const {usuario, fecha, comentario, fkDoctor} = req.query;
     fetchAgregar = async () => {
-        const { valueServicio, valueNombre, date, comment, idDoctor } = this.state;
+        const { valueServicio, valueNombre, date, comment, idDoctor, userCode } = this.state;
         // alert("x")
-        const response = await fetch("https://serverquedoctor.herokuapp.com/comentarios/doctor/agregar?fkDoctor=" + idDoctor + "&fecha=" + date + "&comentario=" + comment + "&usuario=" + valueNombre + "&recomendado=" + valueServicio);
+        const response = await fetch("https://serverquedoctor.herokuapp.com/comentarios/doctor/agregar?fkDoctor=" + idDoctor + "&fecha=" + date + "&comentario=" + comment + "&usuario=" + valueNombre + "&userCode="+userCode+ "&recomendado=" + valueServicio);
         const body = response.json();
         if (response.status != 200) throw Error(body.message)
         return body;
@@ -263,7 +268,7 @@ handleComment = (text) => {
 }
 
 render() {
-    const { valueServicio, valueNombre, comment, avatarColors, username, comments, modal, loading } = this.state
+    const { valueServicio, valueNombre, userCode, comment, avatarColors, username, comments, modal, loading } = this.state
     // console.warn(comments)
     // alert(comments[0])
     return (
@@ -273,7 +278,7 @@ render() {
                 {/* <AddComment2 comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
                          valueServicio={valueServicio} valueNombre={valueNombre} username={username} /> */}
                 <Divider />
-                <Comments2 loading={loading} actualUser={username} deleteComment={this.deleteComment} colors={avatarColors} comments={comments} />
+                <Comments2 loading={loading} userCode={userCode} deleteComment={this.deleteComment} colors={avatarColors} comments={comments} />
             </ScrollView>
             <View style={{ flex: 1 }} >
                 <Fab
