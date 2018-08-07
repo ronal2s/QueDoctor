@@ -33,7 +33,7 @@ console.disableYellowBox = true;
 
 class Main extends Component {
   state = {
-    active: false, blurImages: [1, 1, 1, 1, 1, 1, 1], modal: false, username: ""
+    active: false, blurImages: [1, 1, 1, 1, 1, 1, 1], modal: false, username: "", terms:true
   }
 
   componentDidMount() {
@@ -43,7 +43,7 @@ class Main extends Component {
     var id = number.toString(36).substr(2,9);    
     AsyncStorage.getItem("firstIni", (err, result) => {
       if (result != 1) {
-        this.setState({ modal: true })
+        this.setState({ terms: true, modal:true })
         AsyncStorage.setItem("userCode", id);
       }
     })
@@ -61,21 +61,34 @@ class Main extends Component {
   }
   renderModalContent = () => (
     <View style={styles.modalContent}>
-      <Text style={{ fontWeight: "bold" }} >¿Cuál es tu nombre?</Text>
+      <Text style={{fontWeight:"bold", fontSize: 22}} >¿Cuál es tu nombre?</Text>
       <Text note>No será compartido a menos que así lo prefieras </Text>
       <Item floatingLabel>
-        <Label>Escribir nombre</Label>
+        <Label>Escribir nombre completo</Label>
         <Input value={this.state.username} onChangeText={(username) => this.setState({ username })} />
       </Item>
-      <Button block primary onPress={this.saveName} >
+      <Button style={{ backgroundColor: '#03a9f4'}} block primary onPress={this.saveName} >
         <Text style={{ color: "white" }} >Aceptar</Text>
+      </Button>
+    </View>
+  );
+  renderTerms = () => (
+    <View style={styles.modalContent}>
+      <Text style={{fontWeight:"bold", fontSize: 22}}> Términos y condiciones de uso {'\n'}{'\n'}</Text>
+      <Text >
+      Nosotros no controlamos lo que las personas hacen o dicen, y no somos responsables de sus acciones o conductas en la aplicación o fuera de ella. Nosotros solo somos una vía donde los usuarios pueden comentar y calificar el servicio médico que el hospital o doctor le ha dado.
+
+Con esta aplicación se pretende ayudar a decidir al usuario a donde ir en momentos de urgencias a base de los mismos votos de la comunidad. También tenemos el objetivo de causar un impacto social y que los centros médicos y profesionales del área mejoren para así ofrecer un servicio de calidad para los pacientes.
+      </Text>      
+      <Button style={{ backgroundColor: '#03a9f4', marginVertical: 10 }} block onPress={() => this.setState({terms:false})}>
+      <Text style={{color:"white"}} >Aceptar</Text>
       </Button>
     </View>
   );
 
   saveName = async () => {
     const { username } = this.state;
-    if (username != "") { alert("x")
+    if (username != "") { 
       try {
         await AsyncStorage.setItem("username", username);
         AsyncStorage.setItem("firstIni", "1");
@@ -108,7 +121,7 @@ class Main extends Component {
   };
 
   render() {
-    const { modal } = this.state
+    const { modal, terms} = this.state
     const navigate = this.props.navigation;
     return (
       <Drawer
@@ -126,9 +139,10 @@ class Main extends Component {
           isVisible={modal}
           animationIn="slideInLeft"
           animationOut="slideOutRight"
-          onBackdropPress={() => this.setState({ modal: false })}
+          // onBackdropPress={() => this.setState({ modal: false })}
         >
-          {this.renderModalContent()}
+        {terms? this.renderTerms(): this.renderModalContent()}
+          {/* {this.renderModalContent()} */}
         </Modal>
         <Home2 centros={() => navigate.push("Centros", {city: "all"})} doctores={() => navigate.navigate("Doctores")} />
       </Drawer >

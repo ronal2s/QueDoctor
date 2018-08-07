@@ -172,13 +172,13 @@ export default class classComments extends Component {
         var idDoctor = this.props.navigation.getParam("idDoctor");
         this.setState({ idDoctor })
         // alert(idDoctor)
-        AsyncStorage.getItem("username", (err, result) => {
+        AsyncStorage.getItem("username", (err, result1) => {
             if (!err) {
-                this.setState({ username: result })
-                AsyncStorage.getItem("userCode", (err, result) => {
-                    this.setState({userCode: result})
-                    fetch("https://serverquedoctor.herokuapp.com/usuarioActual?usuario="+this.state.actualUser+"&code="+this.state.userCode);
-                    
+                this.setState({ username: result1 }); 
+                AsyncStorage.getItem("userCode", (err, result2) => {
+                    this.setState({userCode: result2}); 
+                    fetch("https://serverquedoctor.herokuapp.com/usuarioActual?usuario="+result1+"&code="+result2);
+
                 })
             } else {
                 console.error(err)
