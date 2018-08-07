@@ -166,15 +166,14 @@ class classComments extends Component {
             doctor: { nombres: "", apellidos: "", valueEspecialidad: "", valueServicio: "", comentario: "", idCentro: "" },
             doctores: [], centros: [{ id: -1, nombre: "Seleccionar centro médico" }], liked: [], date: moment(new Date()).format("DD/MM/YYYY"),
             alertMessage:false, 
-            especialidades: ["Filtrar doctores", "Pediatra"], valueFiltro:0
+            especialidades: ["Opcion","Pediatra", "Dermatología", "Ginecología","Oftalmología","Urología"], valueFiltro:"Todos"
         }
 
 
     componentDidMount() {
-        // var idCentro = this.props.navigation.getParam("idCentro");
-        // this.setState({ idCentro })
-        // alert(idCentro)
-        this.props.navigation.setParams({especialidades: this.especialidades(this.state.especialidades), valueFiltro: this.state.valueFiltro, handleFiltro: this.handleFiltro})        
+        
+        // especialidadesFiltro.unshift("Todos")
+        this.props.navigation.setParams({especialidades: this.especialidades(this.state.especialidades, 0), valueFiltro: this.state.valueFiltro, handleFiltro: this.handleFiltro})        
 
         AsyncStorage.getItem("username", (err, result) => {
             if (!err) {
@@ -268,32 +267,48 @@ class classComments extends Component {
         this.setState({ doctor })
     }
 
-    static navigationOptions = ({navigation}) => {
-        // header: null,
-        return {header: (<Item style={{backgroundColor: "white", borderColor:"white"}} picker>
-                <Picker
+    static navigationOptions =  {
+        header: null
+        // return {header: (<Item style={{backgroundColor: "white", borderColor:"white"}} picker>
+        //         <Picker
     
-                    mode="dropdown"
-                    placeholder="Seleccionar"
-                    iosIcon={<Icon name="ios-arrow-down-outline" />}
-                    placeholderStyle={{ color: "#bfc6ea" }}
-                    placeholderIconColor="#007aff"
-                    selectedValue={navigation.getParam("valueFiltro")}
-                    // onValueChange={obj.handlePickerNombre}
-                    onValueChange={(text) => navigation.getParam("handleFiltro")(text)}
-                >
-                    {navigation.getParam("especialidades")}
-                </Picker>
-            </Item>)
-        }
-        
-        
+        //             mode="dropdown"
+        //             placeholder="Seleccionar"
+        //             iosIcon={<Icon name="ios-arrow-down-outline" />}
+        //             placeholderStyle={{ color: "#bfc6ea" }}
+        //             placeholderIconColor="#007aff"
+        //             selectedValue={navigation.getParam("valueFiltro")}
+        //             // onValueChange={obj.handlePickerNombre}
+        //             onValueChange={(text) => navigation.getParam("handleFiltro")(text)}
+        //         >
+        //             {/* <Picker.Item value="" label="Todos"/> */}
+        //             {navigation.getParam("especialidades")}
+        //         </Picker>
+        //     </Item>)
+        // }
     }
 
 handleFiltro = (text) =>
 {
     // alert(text)
-    this.setState({valueFiltro: text})
+    this.setState({valueFiltro: text, loading:true})
+    
+    this.fetchFiltros(text)
+    .then(res => this.setState({doctores: res, valueFiltro: text, loading:false}))
+    .catch(err => {
+        Alert.alert("Error", "Ha ocurrido un error, intentar más tarde")
+        console.log(err)
+        // this.setState({loading:false})
+    })
+}
+
+
+fetchFiltros = async(esp) =>
+{    
+    const response = await fetch("https://serverquedoctor.herokuapp.com/doctores/filtro?esp="+esp)
+    const body = response.json()
+    if(response.status != 200) throw Error(body.message)
+    return body;
 }
 
     handleFormChange = (text, obj) => {
@@ -303,12 +318,18 @@ handleFiltro = (text) =>
         this.setState({ doctor })
     }
 
-    especialidades = (especialidades) => {
+    especialidades = (especialidades, opcion) => {        
+        especialidades[0] = "Seleccionar especialidad"
+        if(opcion == 0)
+        {
+            especialidades[0] = "Todos"
+        }
         return especialidades.map((v, i) => {
-
             return <Picker.Item label={v} value={v} />
         })
     }
+    
+    
     centros = (centros) => {
         return centros.map((v, i) => {
 
@@ -366,8 +387,8 @@ handleFiltro = (text) =>
     }
 
     render() {
-        const { doctor, avatarColors, liked, doctores, username, centros, modal, loading, alertMessage } = this.state
-        const especialidades = ["Seleccionar especialidad", "Pediatra"]
+        const { doctor, avatarColors, liked, doctores, username, centros, modal, loading, especialidades } = this.state
+        // var especialidades = ["Seleccionar especialidad", "Pediatra"]
         // console.warn(comments)
         return (
             <Container style={{ backgroundColor: "white" }}>
@@ -375,6 +396,21 @@ handleFiltro = (text) =>
 
                     {/* <AddDoctor comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
                          valueServicio={valueServicio} valueNombre={valueNombre} username={username} /> */}
+                         <Item style={{backgroundColor: "white", borderColor:"white"}} picker>
+                <Picker
+    
+                    mode="dropdown"
+                    placeholder="Seleccionar"
+                    iosIcon={<Icon name="ios-arrow-down-outline" />}
+                    placeholderStyle={{ color: "#bfc6ea" }}
+                    placeholderIconColor="#007aff"
+                    selectedValue={this.state.valueFiltro}
+                    // onValueChange={obj.handlePickerNombre}
+                    onValueChange={(text) => this.handleFiltro(text)}
+                >
+                    {this.especialidades(especialidades,0)}
+                </Picker>
+            </Item>
                     <Divider />
                     <Doctores navigate={this.props.navigation} liked={liked} handleLike={this.handleLike} loading={loading} actualUser={username} colors={avatarColors} doctores={doctores} />
                 </ScrollView>
@@ -396,7 +432,7 @@ handleFiltro = (text) =>
                     animationOut="slideOutRight"
                     onBackdropPress={() => this.setState({ modal: false })}
                 >
-                    <AddDoctor centros={this.centros(centros)} especialidades={this.especialidades(especialidades)} comment={doctor.comentario}
+                    <AddDoctor centros={this.centros(centros)} especialidades={this.especialidades(especialidades,1)} comment={doctor.comentario}
                         handleComment={this.handleComment} agregarDoctor={this.agregarDoctor} handlePickerCentro={this.handlePickerCentro}
                         handlePickerServicio={this.handlePickerServicio} nombres={doctor.nombres} apellidos={doctor.apellidos} handleFormChange={this.handleFormChange}
                         valueServicio={doctor.valueServicio} valueEspecialidad={doctor.valueEspecialidad} valueCentro={doctor.idCentro} username={username} />
