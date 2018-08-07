@@ -61,7 +61,7 @@ const AddComment = (obj) => {
 const AddComment2 = (obj) => {
     return <View style={styles.modalContent}>
 
-        <Text style={{ textAlign: "center" }} >Escribir comentario</Text>
+        <Text style={{fontWeight:"bold", fontSize: 22, textAlign: "center"}} >Escribir comentario</Text>
         <Item picker>
             <Picker
 

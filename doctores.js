@@ -10,7 +10,7 @@ import Comments from './commentsDoctores'
 const AddDoctor = (obj) => {
     return <View style={styles.modalContent}>
 
-        <Text style={{ textAlign: "center" }} >¿Quién fue tú Doctor?</Text>
+        <Text style={{fontWeight:"bold", fontSize: 22, textAlign: "center"}} >¿Quién fue tú Doctor?</Text>
         <Item>
             <Input placeholder="Nombre del doctor" value={obj.nombres} onChangeText={(text) => obj.handleFormChange(text, "nombres")} />
         </Item>
@@ -165,7 +165,8 @@ class classComments extends Component {
             comments: [], username: "", idCentro: "", modal: false, loading: true,
             doctor: { nombres: "", apellidos: "", valueEspecialidad: "", valueServicio: "", comentario: "", idCentro: "" },
             doctores: [], centros: [{ id: -1, nombre: "Seleccionar centro médico" }], liked: [], date: moment(new Date()).format("DD/MM/YYYY"),
-            alertMessage:false
+            alertMessage:false, 
+            especialidades: ["Filtrar doctores", "Pediatra"], valueFiltro:0
         }
 
 
@@ -173,6 +174,8 @@ class classComments extends Component {
         // var idCentro = this.props.navigation.getParam("idCentro");
         // this.setState({ idCentro })
         // alert(idCentro)
+        this.props.navigation.setParams({especialidades: this.especialidades(this.state.especialidades), valueFiltro: this.state.valueFiltro, handleFiltro: this.handleFiltro})        
+
         AsyncStorage.getItem("username", (err, result) => {
             if (!err) {
                 this.setState({ username: result })
@@ -265,9 +268,33 @@ class classComments extends Component {
         this.setState({ doctor })
     }
 
-    static navigationOptions = {
-        header: null
+    static navigationOptions = ({navigation}) => {
+        // header: null,
+        return {header: (<Item style={{backgroundColor: "white", borderColor:"white"}} picker>
+                <Picker
+    
+                    mode="dropdown"
+                    placeholder="Seleccionar"
+                    iosIcon={<Icon name="ios-arrow-down-outline" />}
+                    placeholderStyle={{ color: "#bfc6ea" }}
+                    placeholderIconColor="#007aff"
+                    selectedValue={navigation.getParam("valueFiltro")}
+                    // onValueChange={obj.handlePickerNombre}
+                    onValueChange={(text) => navigation.getParam("handleFiltro")(text)}
+                >
+                    {navigation.getParam("especialidades")}
+                </Picker>
+            </Item>)
+        }
+        
+        
     }
+
+handleFiltro = (text) =>
+{
+    // alert(text)
+    this.setState({valueFiltro: text})
+}
 
     handleFormChange = (text, obj) => {
         var { doctor } = this.state;
