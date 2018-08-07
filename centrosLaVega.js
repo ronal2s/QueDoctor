@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Image, ScrollView, Text, AsyncStorage, Linking} from 'react-native'
+import {Image, ScrollView, Text, AsyncStorage, Linking, ImageBackground, View} from 'react-native'
 import { Card, CardItem, Body, Left, Button, Icon, Right, Spinner} from 'native-base'
 import {createStackNavigator} from 'react-navigation'
 import Comments from './commentsCentros'
@@ -32,7 +32,10 @@ const GenerateCards = (obj) =>
                 </Body>
             </CardItem>
             <CardItem cardBody>
-                <Image source={{uri: v.image}} style={{height:200, width:200, flex:1}} />
+                {/* <Image source={{uri: v.image}} style={{height:200, width:200, flex:1}} /> */}
+                <ImageBackground source={{uri: v.image}} style={{height:200, width:400, margin: 3, flex:1}}>
+                <View flex={1} style={{backgroundColor: "rgba(129,212,250,0.3)"}} />
+                </ImageBackground>
             </CardItem>
             <CardItem>
                 <Left>
@@ -65,7 +68,7 @@ class Centros extends Component
     {
         liked: [{idcentro: 'a'}],
         likes: [126,133,12,89],
-        city: "", centros:[], actualUser:""
+        city: "", centros:[], actualUser:"", userCode:""
     }
 
     componentDidMount()
@@ -79,7 +82,11 @@ class Centros extends Component
             {
                 // alert(result)
                 this.setState({actualUser: result});
-                fetch("https://serverquedoctor.herokuapp.com/usuarioActual?usuario="+result);
+                AsyncStorage.getItem("userCode", (err, result) => {
+                    this.setState({userCode: result}); 
+                    fetch("https://serverquedoctor.herokuapp.com/usuarioActual?usuario="+result+"&code="+result);
+                })
+                
             }
         })
     }

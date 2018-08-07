@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, StyleSheet, Text, AsyncStorage } from 'react-native'
+import { ScrollView, StyleSheet, Text, AsyncStorage, Alert } from 'react-native'
 import { Card, CardItem, Picker, Item, Icon, Fab, Textarea, View, Form, Content, Button, Body, List, ListItem, Left, Thumbnail, Right, Spinner, Container } from 'native-base'
 import { Avatar, Divider } from 'react-native-elements'
 import moment from 'moment'
@@ -191,7 +191,7 @@ export default class classComments extends Component {
             .then(res => this.setState({ comments: res }))
             .catch(err => {
                 console.log("Error borrando comentario: " + err);
-                alert("Ha ocurrido un error eliminando el comentario")
+                Alert.alert("Ha ocurrido un error", "Ha ocurrido un error eliminando el comentario")
             })
     }
 
@@ -215,7 +215,7 @@ export default class classComments extends Component {
         this.fetchComentarios(idDoctor)
             .then(res => this.setState({ comments: res, loading: false }))
             .catch(err => {
-                alert("Error obteniendo comentarios")
+                Alert.alert("Ha ocurrido un error", "Error obteniendo comentarios")
                 console.log(err)
             })
     }
@@ -238,16 +238,16 @@ export default class classComments extends Component {
                         })
                         .catch(err => {
                             console.log(err);
-                            alert("Error obteniendo nuevos comentarios")
+                            Alert.alert("Ha ocurrido un error", "Error obteniendo nuevos comentarios")
                         })
                 } else {
-                    alert("El comentario no puede estar vacío")
+                    Alert.alert("Ha ocurrido un error", "El comentario no puede estar vacío")
                 }
             } else {
-                alert("Debe seleccionar que tal fue el servicio")
+                Alert.alert("Ha ocurrido un error", "Debe seleccionar que tal fue el servicio")
             }
         } else {
-            alert("Debe seleccionar si ser anónimo o el nombre registrado")
+            Alert.alert("Ha ocurrido un error", "Debe seleccionar si ser anónimo o el nombre registrado")
         }
 
     }

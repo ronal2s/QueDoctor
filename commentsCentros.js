@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, StyleSheet, Text, AsyncStorage } from 'react-native'
+import { ScrollView, StyleSheet, Text, AsyncStorage, Alert } from 'react-native'
 import { Card, CardItem, Picker, Item, Icon, Fab, Textarea, View, Form, Content, Button, Body, List, ListItem, Left, Thumbnail, Right, Spinner, Container } from 'native-base'
 import { Avatar, Divider } from 'react-native-elements'
 import moment from 'moment'
@@ -127,7 +127,7 @@ const Comments2 = (obj) => {
                         <Body>
                             <Text style={{ fontWeight: "bold" }} >{v.usuario}</Text>
                             <Text>{v.recomendado.toUpperCase() + " - " + v.comentario}</Text>
-                            {obj.actualUser == v.usuario ?
+                            {obj.userCode == v.usercode ?
                                 <Button block transparent onPress={() => obj.deleteComment(v.id)}><Text>Borrar comentario</Text></Button>
                                 : <Text />}
                         </Body>
@@ -157,7 +157,7 @@ export default class classComments extends Component {
         {
             valueServicio: "0", valueNombre: "0", date: moment(new Date()).format("DD/MM/YYYY"), comment: "",
             avatarColors: ["#d32f2f", "#7b1fa2", "#1976d2", "#388e3c", "#ffa000", "#e64a19"],
-            comments: [], username: "", idCentro: "", modal: false, loading: true
+            comments: [], username: "", idCentro: "", modal: false, loading: true, userCode:""
         }
     handlePickerServicio = (value: string) => {
         this.setState({ valueServicio: value })
@@ -173,6 +173,9 @@ export default class classComments extends Component {
         AsyncStorage.getItem("username", (err, result) => {
             if (!err) {
                 this.setState({ username: result })
+                AsyncStorage.getItem("userCode", (err, result) => {
+                    this.setState({userCode: result})
+                })
             } else {
                 console.error(err)
             }
@@ -189,7 +192,7 @@ export default class classComments extends Component {
             .then(res => this.setState({ comments: res }))
             .catch(err => {
                 console.log("Error borrando comentario: " + err);
-                alert("Ha ocurrido un error eliminando el comentario")
+                Alert.alert("Ha ocurrido un error", "Ha ocurrido un error eliminando el comentario")
             })
     }
 
@@ -201,9 +204,9 @@ export default class classComments extends Component {
     }
     // const {usuario, fecha, comentario, fkCentro} = req.query;
     fetchAgregar = async () => {
-        const { valueServicio, valueNombre, date, comment, idCentro } = this.state;
-        // alert("x")
-        const response = await fetch("https://serverquedoctor.herokuapp.com/comentarios/centro/agregar?fkCentro=" + idCentro + "&fecha=" + date + "&comentario=" + comment + "&usuario=" + valueNombre + "&recomendado=" + valueServicio);
+        const { valueServicio, valueNombre, date, comment, idCentro, userCode } = this.state;
+        // Alert.alert("Ha ocurrido un error", "x")
+        const response = await fetch("https://serverquedoctor.herokuapp.com/comentarios/centro/agregar?fkCentro=" + idCentro + "&fecha=" + date + "&comentario=" + comment + "&usuario=" + valueNombre + "&userCode="+userCode+"&recomendado=" + valueServicio);
         const body = response.json();
         if (response.status != 200) throw Error(body.message)
         return body;
@@ -213,7 +216,7 @@ export default class classComments extends Component {
         this.fetchComentarios(idCentro)
             .then(res => this.setState({ comments: res, loading: false }))
             .catch(err => {
-                alert("Error obteniendo comentarios")
+                Alert.alert("Ha ocurrido un error", "Error obteniendo comentarios")
                 console.log(err)
             })
     }
@@ -236,16 +239,16 @@ export default class classComments extends Component {
                         })
                         .catch(err => {
                             console.log(err);
-                            alert("Error obteniendo nuevos comentarios")
+                            Alert.alert("Ha ocurrido un error", "Error obteniendo nuevos comentarios")
                         })
                 } else {
-                    alert("El comentario no puede estar vacío")
+                    Alert.alert("Ha ocurrido un error", "El comentario no puede estar vacío")
                 }
             } else {
-                alert("Debe seleccionar que tal fue el servicio")
+                Alert.alert("Ha ocurrido un error", "Debe seleccionar que tal fue el servicio")
             }
         } else {
-            alert("Debe seleccionar si ser anónimo o el nombre registrado")
+            Alert.alert("Ha ocurrido un error", "Debe seleccionar si ser anónimo o el nombre registrado")
         }
 
     }
@@ -259,7 +262,7 @@ export default class classComments extends Component {
     }
 
     render() {
-        const { valueServicio, valueNombre, comment, avatarColors, username, comments, modal, loading } = this.state
+        const { valueServicio, valueNombre, comment, avatarColors, userCode, username, comments, modal, loading } = this.state
         // console.warn(comments)
         return (
             <Container style={{ backgroundColor: "white" }}>
@@ -268,7 +271,7 @@ export default class classComments extends Component {
                     {/* <AddComment2 comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
                          valueServicio={valueServicio} valueNombre={valueNombre} username={username} /> */}
                     <Divider />
-                    <Comments2 loading={loading} actualUser={username} deleteComment={this.deleteComment} colors={avatarColors} comments={comments} />
+                    <Comments2 loading={loading} userCode={userCode} deleteComment={this.deleteComment} colors={avatarColors} comments={comments} />
                 </ScrollView>
                 <View style={{ flex: 1 }} >
                     <Fab

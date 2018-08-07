@@ -38,10 +38,13 @@ class Main extends Component {
 
   componentDidMount() {
     this.props.navigation.setParams({ openDrawer: this.openDrawer, openModal: this.openModal})
-
+    var number = Math.random();
+    number.toString();
+    var id = number.toString(36).substr(2,9);    
     AsyncStorage.getItem("firstIni", (err, result) => {
       if (result != 1) {
         this.setState({ modal: true })
+        AsyncStorage.setItem("userCode", id);
       }
     })
 

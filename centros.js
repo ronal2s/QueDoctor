@@ -70,7 +70,7 @@ class Centros extends Component
     {
         liked: [{idcentro: 'a'}],
         likes: [126,133,12,89],
-        city: "", centros:[], actualUser:"", loading:true,
+        city: "", centros:[], actualUser:"", loading:true, userCode:""
     }
 
     componentDidMount()
@@ -82,9 +82,14 @@ class Centros extends Component
             {
                 // alert(result)
                 this.setState({actualUser: result});
-                fetch("https://serverquedoctor.herokuapp.com/usuarioActual?usuario="+result);
+                AsyncStorage.getItem("userCode", (err, result) => {
+                    this.setState({userCode: result}); 
+                    fetch("https://serverquedoctor.herokuapp.com/usuarioActual?usuario="+result+"&code="+result);
+                })
+                
             }
         })
+        
     }
 
     

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, StyleSheet, Text, AsyncStorage } from 'react-native'
+import { ScrollView, StyleSheet, Text, AsyncStorage, Alert, Linking } from 'react-native'
 import { Card, CardItem, Picker, Item, Icon, Fab, Textarea, View, Form, Content, Button, Body, List, ListItem, Left, Thumbnail, Right, Spinner, Container, Input } from 'native-base'
 import { Avatar, Divider } from 'react-native-elements'
 import moment from 'moment'
@@ -93,19 +93,19 @@ const Doctores = (obj) => {
 
 
                 return <Card key={i} >
-                    <CardItem style={{ backgroundColor: v.verificado ? "white" : "#ffab40" }} >
+                    <CardItem style={{ backgroundColor: v.verificado ? "white" : "#ffe0b2" }} >
                         <Body>
                             <Text style={{ fontWeight: "bold" }} >{v.nombres + ' ' + v.apellidos}</Text>
                             <Text note>{v.especialidad + " en el centro médico " + v.centro}</Text>
                         </Body>
                         <Right>
-                            <Button transparent onPress={() => alert("Un nombre verificado es aquel que hemos comprobado que está escrito correctamente y además, que trabaja en el lugar mencionado")}>
-                                <Text>{v.verificado ? "Nombre verificado" : "Nombre no verificado"}</Text>
+                            <Button transparent onPress={() => Alert.alert("Aviso","Un nombre verificado es aquel que hemos comprobado que está escrito correctamente y además, que trabaja en el lugar mencionado")}>
+                                <Text>{v.verificado ? "" : "Nombre no verificado"}</Text>
                             </Button>
                         </Right>
                     </CardItem>
 
-                    <CardItem style={{ backgroundColor: v.verificado ? "white" : "#ffab40" }}>
+                    <CardItem style={{ backgroundColor: v.verificado ? "white" : "#ffe0b2" }}>
                         <Left>
                             <Button transparent onPress={() => obj.handleLike(v.id)}  >
                                 <Icon style={thisliked ? "" : { color: 'gray' }} name="thumbs-up" />
@@ -165,6 +165,7 @@ class classComments extends Component {
             comments: [], username: "", idCentro: "", modal: false, loading: true,
             doctor: { nombres: "", apellidos: "", valueEspecialidad: "", valueServicio: "", comentario: "", idCentro: "" },
             doctores: [], centros: [{ id: -1, nombre: "Seleccionar centro médico" }], liked: [], date: moment(new Date()).format("DD/MM/YYYY"),
+            alertMessage:false
         }
 
 
@@ -291,36 +292,37 @@ class classComments extends Component {
     }
     agregarDoctor = () => {
         var { doctor } = this.state;
-        // alert(doctor.idCentro)
+        // Alert.alert("Ha ocurrido un error", doctor.idCentro)
         if (doctor.nombres != "") {
             if (doctor.apellidos != "") {
                 if (doctor.valueEspecialidad != "") {
-                    if (doctor.idCentro != "") {//Esto no está funcionando
+                    if (doctor.idCentro != "") {
                         if (doctor.valueServicio != "") {
                             if (doctor.comentario != "") {
                                 this.fetchAgregar()
                                     .then(res => this.setState({ doctores: res, modal: false }))
                                     .catch(err => {
                                         console.log(err)
-                                        alert("Error, intentar más tarde")
+                                        Alert.alert("Ha ocurrido un error", "Favor intentar más tarde")
                                     });
                             } else {
-                                alert("Favor contarnos por qué es importante que ese Doctor esté aquí")
+                                Alert.alert("Ha ocurrido un error", "Favor contarnos por qué es importante que ese Doctor esté aquí")
                             }
                         } else {
-                            alert("Debe seleccionar que tal fue la experiencia con su Doctor")
+                            Alert.alert("Ha ocurrido un error", "Debe seleccionar que tal fue la experiencia con su Doctor")
                         }
                     } else {
-                        alert("Debe seleccionar el centro médico donde labora el Doctor")
+                        Alert.alert("Ha ocurrido un error", "Debe seleccionar el centro médico donde labora el Doctor")
                     }
                 } else {
-                    alert("Debe seleccionar cual es la especialidad del Doctor")
+                    Alert.alert("Ha ocurrido un error", "Debe seleccionar cual es la especialidad del Doctor")
                 }
             } else {
-                alert("El campo de apellidos no debe estar vacío")
+                Alert.alert("Ha ocurrido un error", "El campo de apellidos no debe estar vacío")
             }
         } else {
-            alert("Debe escribir el nombre del Doctor")
+            // alert("Debe escribir el nombre del Doctor");
+            Alert.alert("Ha ocurrido un error", "Debe escribir el nombre del Doctor");
         }
 
     }
@@ -333,7 +335,7 @@ class classComments extends Component {
     }
 
     render() {
-        const { doctor, avatarColors, liked, doctores, username, centros, modal, loading } = this.state
+        const { doctor, avatarColors, liked, doctores, username, centros, modal, loading, alertMessage } = this.state
         const especialidades = ["Seleccionar especialidad", "Pediatra"]
         // console.warn(comments)
         return (
