@@ -15,7 +15,7 @@ import CentrosSantiago from './centrosSantiago'
 import CentrosSantoDomingo from './centrosSantoDomingo'
 import CentrosLaVega from './centrosLaVega'
 import CentrosMacoris from './centrosMacoris'
-import Comments from './comments'
+import Diagnostico from './diagnostico'
 
 class HomeScreen extends React.Component {
   render() {
@@ -144,7 +144,7 @@ Con esta aplicación se pretende ayudar a decidir al usuario a donde ir en momen
         {terms? this.renderTerms(): this.renderModalContent()}
           {/* {this.renderModalContent()} */}
         </Modal>
-        <Home2 centros={() => navigate.push("Centros", {city: "all"})} doctores={() => navigate.navigate("Doctores")} />
+        <Home2 centros={() => navigate.push("Centros", {city: "all"})} doctores={() => navigate.navigate("Doctores")} diagnostico={() => navigate.navigate("Diagnostico")} />
       </Drawer >
     );
   }
@@ -159,6 +159,7 @@ const RootStack = createStackNavigator(
     CentrosSantoDomingo: CentrosSantoDomingo,
     CentrosLaVega: CentrosLaVega,
     CentrosMacoris: CentrosMacoris,
+    Diagnostico: Diagnostico
   },
   {
     initialRouteName: 'Home',

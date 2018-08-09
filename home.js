@@ -31,7 +31,7 @@ const HomeCards = (obj) => {
       </CardItem>
     </Card>
     <Card>
-      <CardItem button>
+      <CardItem button onPress={obj.diagnostico} >
         <ImageBackground blurRadius={1} source={{ uri: "https://www.betootaadvocate.com/wp-content/uploads/2017/12/dad-directions.jpg" }} style={styles.homeImages}>
           <View flex={1} style={styles.boxes} >
             {/* <TouchableOpacity> */}
@@ -103,12 +103,12 @@ export default class Home extends Component {
   }  
 
   render() {
-    const { centros, doctores } = this.props
+    const { centros, doctores, diagnostico } = this.props
     const { modal } = this.state    
     
     return (
       <View style={{ flex: 1 }} >
-        <HomeCards centros={centros} doctores={doctores} />
+        <HomeCards centros={centros} doctores={doctores} diagnostico={diagnostico}/>
         
       </View>
     )

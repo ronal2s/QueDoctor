@@ -60,7 +60,7 @@ const GenerateCards = (obj) =>
         </Card>
         })
     }
-    return <Spinner/>
+    return <Spinner color='#03a9f4'/>
 }
 class Centros extends Component
 {

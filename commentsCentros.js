@@ -145,7 +145,7 @@ const Comments2 = (obj) => {
         }
 
     } else {
-        return <Spinner />
+        return <Spinner color='#03a9f4'/>
     }
 
 
