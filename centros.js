@@ -109,7 +109,10 @@ class Centros extends Component {
     getCentrosTodos = () => {
         this.fetchCentrosTodos()
             .then(res => this.setState({ centros: res, loading:false }))
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err)
+                Alert.alert("Error", "Ha ocurrido un error obteniendo los datos")
+            });
     }
 
     fetchLike = async (idCentro) => {

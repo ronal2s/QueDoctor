@@ -108,7 +108,7 @@ const Doctores = (obj) => {
                     <CardItem style={{ backgroundColor: v.verificado ? "white" : "#ffe0b2" }}>
                         <Left>
                             <Button transparent onPress={() => obj.handleLike(v.id)}  >
-                                <Icon style={thisliked ? "" : { color: 'gray' }} name="thumbs-up" />
+                                <Icon style={{color: thisliked?'#03a9f4':'gray'}} name="thumbs-up" />
                                 <Text>{" " + v.likes + " Likes"}</Text>
                             </Button>
                         </Left>
