@@ -1,14 +1,15 @@
 import React, {Component} from 'react'
-import {Image, ScrollView, Text, AsyncStorage, Linking, ImageBackground, View} from 'react-native'
-import { Card, CardItem, Body, Left, Button, Icon, Right, Spinner} from 'native-base'
+import {Image, ScrollView, Text, AsyncStorage, Linking, ImageBackground, View, StyleSheet} from 'react-native'
+import { Card, CardItem, Body, Left, Button, Icon, Right, Spinner, Fab, Item, Label, Input, Container} from 'native-base'
 import {createStackNavigator} from 'react-navigation'
 import Comments from './commentsCentros'
+import Modal from "react-native-modal";
 
 const GenerateCards = (obj) =>
 {
     const navigate = obj.navigate
     var thisliked = false    
-    if(obj.centros.length>0)
+    if(obj.centros.length>0 && !obj.loading)
     {
         return obj.centros.map((v,i) => {
             thisliked=false;        
@@ -40,7 +41,7 @@ const GenerateCards = (obj) =>
             <CardItem>
                 <Left>
                     <Button transparent onPress={() => obj.handleLike(v.id, thisliked)}  >
-                        <Icon  style={thisliked?"":{color: 'gray'}} name="thumbs-up"/>
+                        <Icon  style={{color: thisliked?'#03a9f4':'gray'}} name="thumbs-up"/>
                         <Text>{" " + v.likes + " Likes"}</Text>
                     </Button>
                 </Left>
@@ -68,7 +69,7 @@ class Centros extends Component
     {
         liked: [{idcentro: 'a'}],
         likes: [126,133,12,89],
-        city: "", centros:[], actualUser:"", userCode:""
+        city: "", centros:[], actualUser:"", userCode:"", filtro:"", loading:false, modal:false
     }
 
     componentDidMount()
@@ -116,7 +117,7 @@ class Centros extends Component
 
     getCentrosCiudad = (city) => {
         this.fetchCentrosCiudad(city)
-            .then(res => this.setState({centros: res}))
+            .then(res => this.setState({centros: res, loading:false}))
             .catch(err => console.log(err));
     }
 
@@ -173,15 +174,76 @@ class Centros extends Component
         // title: "asdaasdsa"
     }
 
+    fetchFiltro = async (value) => {
+        const response = await fetch("https://serverquedoctor.herokuapp.com/centros/buscarEnCiudad?value=" + value+"&ciudad="+"Santo Domingo");
+        const body = response.json()
+        if (response.status != 200) throw Error(body.message)
+        return body;
+    }
+    getFiltro = (value) => {        
+        this.fetchFiltro(value)
+            .then(res => {
+                this.setState({ centros: res, loading: false, filtro:"" })
+            })
+            .catch(err => {
+                console.log(err)
+                Alert.alert("Error", "Ha ocurrido un error, favor volver a intentar")
+            })
+    }
+
+    filtro = () =>
+    {
+        this.setState({ modal: false, loading: true, centros:[] })
+        const {filtro} = this.state;
+        this.getFiltro(filtro);
+    } 
+
+    renderModalContent = () => {
+        return <View style={styles.modalContent}>
+            <Text style={{ fontWeight: "bold", fontSize: 22 }} >Buscar</Text>
+            <Item floatingLabel>
+                <Label>Dejar casilla vacía para obtener todo</Label>
+                <Input value={this.state.filtro} onChangeText={(filtro) => this.setState({ filtro })} />
+            </Item>
+            <Button style={{ backgroundColor: '#03a9f4' }} block primary onPress={() => this.filtro(this.state.filtro)} >
+                <Text style={{ color: "white" }} >Buscar</Text>
+            </Button>
+        </View>
+    }
+
     render()
     {
-        const {centros, liked, likes} = this.state;
+        const {centros, liked, likes, modal, loading} = this.state;
         
         // console.warn(liked)
         return(
-            <ScrollView>
-                <GenerateCards centros={centros} navigate={this.props.navigation} handleLike={this.handleLike} liked={liked} likes={likes} />
-            </ScrollView>
+            <Container>
+                <Modal
+                    isVisible={modal}
+                    animationIn="slideInLeft"
+                    animationOut="slideOutRight"
+                    onBackdropPress={() => this.setState({ modal: false })}>
+                    
+                    {this.renderModalContent()}
+                </Modal>
+                <ScrollView>                    
+                    <GenerateCards loading={loading} centros={centros} navigate={this.props.navigation} handleLike={this.handleLike} liked={liked} likes={likes} />
+                </ScrollView>
+
+
+                <View style={{ flex: 1 }} >
+                    <Fab
+                        active={this.state.active}
+                        //#03a9f4
+                        containerStyle={{}}
+                        style={{ backgroundColor: '#03a9f4' }}
+                        position="bottomRight"
+                        onPress={() => this.setState({ modal: true })}>
+                        <Icon type="MaterialIcons" name="search" />
+
+                    </Fab>
+                </View>
+            </Container>
         )
     }
 }
@@ -196,7 +258,16 @@ const RootStack = createStackNavigator(
         initialRouteParams: {city:"si"}
     }
 )
-
+const styles = StyleSheet.create({
+    modalContent: {
+        backgroundColor: "white",
+        padding: 22,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 4,
+        borderColor: "rgba(0, 0, 0, 0.1)"
+    },
+})
 export default class App extends Component {    
     render() {        
         return <RootStack/>

@@ -36,7 +36,7 @@ const GenerateCards = (obj) => {
                 <CardItem>
                     <Left>
                         <Button transparent onPress={() => obj.handleLike(v.id, thisliked)}  >
-                            <Icon style={{ color: thisliked?"#03a9f4": "gray" }} name="thumbs-up" />
+                            <Icon style={{color: thisliked?'#03a9f4':'gray'}} name="thumbs-up" />
                             <Text>{" " + v.likes + " Likes"}</Text>
                         </Button>
                     </Left>
@@ -222,13 +222,10 @@ class Centros extends Component {
                         style={{ backgroundColor: '#03a9f4' }}
                         position="bottomRight"
                         onPress={() => this.setState({ modal: true })}>
-                        <Icon type="MaterialCommunityIcons" name="comment-plus-outline" />
+                        <Icon type="MaterialIcons" name="search" />
 
                     </Fab>
                 </View>
-
-
-
             </Container>
         )
     }
