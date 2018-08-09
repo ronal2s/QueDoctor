@@ -10,7 +10,7 @@ const HomeCards = (obj) => {
   return <View flex={1} style={styles.home} >
     <Card>
       <CardItem button button onPress={obj.doctores} >
-        <ImageBackground blurRadius={1} resizeMode='cover' source={{ uri: "http://www.besthealthmag.ca/wp-content/uploads/2016/01/doctor_2.jpg" }} style={styles.homeImages}>
+        <ImageBackground blurRadius={1} resizeMode='cover' source={{ uri: "https://cdn.aarp.net/content/dam/aarp/health/healthy-living/2018/03/1140-patient-memory-recall.imgcache.rev853817f01aa4fbfebf56cebad6d639aa.jpg" }} style={styles.homeImages}>
           <View flex={1} style={styles.boxes} >
             {/* <TouchableOpacity> */}
             <Text style={[styles.homeTitles, { marginVertical: 70 }]} >¿Cuál doctor?</Text>
@@ -21,7 +21,7 @@ const HomeCards = (obj) => {
     </Card>
     <Card>
       <CardItem button onPress={obj.centros}>
-        <ImageBackground blurRadius={1} source={{ uri: "https://storage.googleapis.com/mmc-elcaribe-bucket/uploads/2017/12/fcd8b684-homs-fe.jpg" }} style={styles.homeImages}>
+        <ImageBackground blurRadius={1} source={{ uri: "https://www.teleradioamerica.com/wp-content/uploads/2017/05/Hospital-Dr.-Ney-Arias-Lora.jpg" }} style={[styles.homeImages]}>
           <View flex={1} style={styles.boxes} >
             {/* <TouchableOpacity> */}
             <Text style={[styles.homeTitles, { marginVertical: 70 }]} >¿Dónde ir?</Text>
@@ -32,10 +32,10 @@ const HomeCards = (obj) => {
     </Card>
     <Card>
       <CardItem button onPress={obj.diagnostico} >
-        <ImageBackground blurRadius={1} source={{ uri: "https://www.betootaadvocate.com/wp-content/uploads/2017/12/dad-directions.jpg" }} style={styles.homeImages}>
+        <ImageBackground blurRadius={1} source={{ uri: "https://radiofelicidad.mx/wp-content/uploads/2018/01/enfermo-1.jpg" }} style={styles.homeImages}>
           <View flex={1} style={styles.boxes} >
             {/* <TouchableOpacity> */}
-            <Text style={[styles.homeTitles, { marginVertical: 70 }]} >¿Cómo llegar?</Text>
+            <Text style={[styles.homeTitles, { marginVertical: 70 }]} >¿Qué tengo?</Text>
             {/* </TouchableOpacity> */}
           </View>
         </ImageBackground>
