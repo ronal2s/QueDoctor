@@ -119,11 +119,12 @@ const Comments2 = (obj) => {
                 numColor = Math.floor(Math.random() * (5 - 0) + 0)
                 // firstLetterUserName = v.usuario.toUpperCase();
                 // alert(numColor)
+                firstLetterUserName = v.usuario != undefined ? v.usuario[0].toUpperCase():"X";
                 return <List key={i} on >
                     <ListItem avatar >
                         <Left>
                             {/* <Thumbnail source={{uri: ""}}/> */}
-                            <Avatar size="small" rounded title={v.usuario != undefined ? v.usuario[0].toUpperCase() : ""} activeOpacity={0.7} overlayContainerStyle={{ backgroundColor: obj.colors[numColor] }} />
+                            <Avatar size="small" rounded title={firstLetterUserName} activeOpacity={0.7} overlayContainerStyle={{ backgroundColor: obj.letterColor[firstLetterUserName] }} />
                         </Left>
                         <Body>
                             <Text style={{ fontWeight: "bold" }} >{v.usuario}</Text>
@@ -158,7 +159,10 @@ export default class classComments extends Component {
         {
             valueServicio: "0", valueNombre: "0", date: moment(new Date()).format("DD/MM/YYYY"), comment: "",
             avatarColors: ["#d32f2f", "#7b1fa2", "#1976d2", "#388e3c", "#ffa000", "#e64a19"],
-            comments: [], username: "", idDoctor: "", modal: false, loading: true, userCode:""
+            comments: [], username: "", idDoctor: "", modal: false, loading: true, userCode:"",
+            letterColor: {A: "#e57373", B: "f06292", C: "#ba68c8", D: "#9575cd", E:"#7986cb", F: "#64b5f6", G:"#4fc3f7", H:"#4dd0e1", I:"#4db6ac", 
+            J:"#81c784", K:"#aed581", L:"#dce775", M:"#fff176", N:"#ffd54f", O:"#ffb74d", P:"#ff8a65", Q:"#a1887f", R:"#90a4ae", S:"#f57c00",
+            T: "#ffa000", U:"#fbc02d", V:"#afb42b", W:"#689f38", X:"#388e3c", Y:"#0097a7", Z:"#1976d2" }
         }
     handlePickerServicio = (value: string) => {
         // alert(value)
@@ -268,7 +272,7 @@ handleComment = (text) => {
 }
 
 render() {
-    const { valueServicio, valueNombre, userCode, comment, avatarColors, username, comments, modal, loading } = this.state
+    const { valueServicio, valueNombre, userCode, comment, letterColor, username, comments, modal, loading } = this.state
     // console.warn(comments)
     // alert(comments[0])
     return (
@@ -278,7 +282,7 @@ render() {
                 {/* <AddComment2 comment={comment} handleComment={this.handleComment} enviarComentario={this.agregarComentario} handlePickerNombre={this.handlePickerNombre} handlePickerServicio={this.handlePickerServicio}
                          valueServicio={valueServicio} valueNombre={valueNombre} username={username} /> */}
                 <Divider />
-                <Comments2 loading={loading} userCode={userCode} deleteComment={this.deleteComment} colors={avatarColors} comments={comments} />
+                <Comments2 loading={loading} userCode={userCode} deleteComment={this.deleteComment} letterColor={letterColor} comments={comments} />
             </ScrollView>
             <View style={{ flex: 1 }} >
                 <Fab

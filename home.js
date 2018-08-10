@@ -21,7 +21,7 @@ const HomeCards = (obj) => {
     </Card>
     <Card>
       <CardItem button onPress={obj.centros}>
-        <ImageBackground blurRadius={1} source={{ uri: "https://www.teleradioamerica.com/wp-content/uploads/2017/05/Hospital-Dr.-Ney-Arias-Lora.jpg" }} style={[styles.homeImages]}>
+        <ImageBackground blurRadius={1} source={{ uri: "http://lugaresinsolitos.com/wp-content/uploads/2017/05/se-la-pasan-pensando.jpg" }} style={[styles.homeImages]}>
           <View flex={1} style={styles.boxes} >
             {/* <TouchableOpacity> */}
             <Text style={[styles.homeTitles, { marginVertical: 70 }]} >¿Dónde ir?</Text>
